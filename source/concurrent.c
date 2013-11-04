@@ -129,7 +129,6 @@ Concurrent_GetModuleInfo(int *outVersionMajor,
                          int *outIsStackGrowthDownward,
                          unsigned long *outMinimumStackSize,
                          const char **outLicenseName,
-                         const char **outLicenseURL,
                          const char **outProjectURL,
                          const char **outBuildDateTime,
                          const char **outBuildInfo,
@@ -157,8 +156,7 @@ Concurrent_GetModuleInfo(int *outVersionMajor,
     if (outIsStackGrowthDownward) *outIsStackGrowthDownward = 1; /* TODO */
     if (outMinimumStackSize) *outMinimumStackSize = (unsigned long)CONCURRENT_MIN_STACK_SIZE;
 
-    if (outLicenseName) *outLicenseName = "GNU LESSER GENERAL PUBLIC LICENSE";
-    if (outLicenseURL) *outLicenseURL = "http://www.gnu.org/licenses/lgpl-3.0.txt";
+    if (outLicenseName) *outLicenseName = "zlib License";
     if (outProjectURL) *outProjectURL = "http://code.google.com/p/libconcurrent/";
     if (outBuildDateTime) {
 #ifdef __DATE__

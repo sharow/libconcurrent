@@ -17,7 +17,7 @@ UNAME=uname
 .PHONY: install
 .VPATH: ./ ./source ./source/arch/i386 ./source/arch/x86_64
 
-VERSION=0.2.6
+VERSION=0.3.0
 
 ifeq ($(ARCH),)
  ARCH=$(shell $(UNAME) -m)

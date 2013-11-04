@@ -12,7 +12,6 @@ int main(void)
     int IsStackGrowthDownward;
     unsigned long MinimumStackSize;
     const char *LicenseName;
-    const char *LicenseURL;
     const char *ProjectURL;
     const char *BuildDateTime;
     const char *BuildInfo;
@@ -25,7 +24,6 @@ int main(void)
                              &IsStackGrowthDownward,
                              &MinimumStackSize,
                              &LicenseName,
-                             &LicenseURL,
                              &ProjectURL,
                              &BuildDateTime,
                              &BuildInfo,
@@ -37,7 +35,6 @@ int main(void)
     printf("- is stack growth downward: %s\n", IsStackGrowthDownward ? "YES" : "NO");
     printf("- minimum stack size: %lu bytes\n", MinimumStackSize);
     printf("- license: %s\n", LicenseName);
-    printf("- license URL: %s\n", LicenseURL);
     printf("- project URL: %s\n", ProjectURL);
     printf("- build date: %s\n", BuildDateTime);
     printf("- build info: %s\n", BuildInfo);
