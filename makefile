@@ -121,7 +121,7 @@ help:
 	@echo "clean help win32_dll win32_lib release_win32_gcc sample"
 
 install: $(TARGET_STATIC)
-	install -Dm644 -s libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
+	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
 	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)/usr/include/concurrent/concurrent.h
 	install -Dm644 include/concurrent/short_lower_case_api.h $(DESTDIR)/usr/include/concurrent/short_lower_case_api.h
 
