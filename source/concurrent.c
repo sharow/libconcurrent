@@ -208,8 +208,8 @@ ConcurrentContext_Construct(ConcurrentContext *aContext,
         return ConcurrentStatus_E_STACKSIZE_TOO_SMALL;
     }
     aContext->mProcedure = aProcedure;
-    aContext->mStackBuffer = (unsigned char *)((Concurrent_CPURegister_t)(aStackBuffer + 7) & ~7);
-    aContext->mStackSize = aStackSize & ~7;
+    aContext->mStackBuffer = (unsigned char *)((Concurrent_CPURegister_t)(aStackBuffer + 15) & ~15);
+    aContext->mStackSize = aStackSize & ~15;
     aContext->mUserPtr = aUserPtr;
 
     /* TODO: stack direction */
