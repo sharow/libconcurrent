@@ -209,7 +209,7 @@ ConcurrentContext_Construct(ConcurrentContext *aContext,
     }
     aContext->mProcedure = aProcedure;
     aContext->mStackBuffer = (unsigned char *)((Concurrent_CPURegister_t)(aStackBuffer + 15) & ~15);
-    aContext->mStackSize = aStackSize & ~15;
+    aContext->mStackSize = (aStackSize + aStackBuffer - aContext->mStackBuffer) & ~15;
     aContext->mUserPtr = aUserPtr;
 
     /* TODO: stack direction */
