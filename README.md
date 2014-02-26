@@ -1,7 +1,7 @@
 # libconcurrent
 
 ## features
-+ asymmetric-coroutin
++ asymmetric-coroutine
 + generator
 + native context switch
 + avoid another-lib dependency
