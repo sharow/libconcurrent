@@ -28,9 +28,9 @@ int main(void)
         context = malloc(ctx_sizeof());
         stack = malloc(sizeof(*stack) * stack_size);
         status = ctx_construct(context,
-							   stack + torture_offset,
-							   stack_size - torture_offset,
-							   test_generator, NULL);
+                               stack + torture_offset,
+                               stack_size - torture_offset,
+                               test_generator, NULL);
 
         assert(status == ConcurrentStatus_SUCCESS);
         assert(strcmp(gen_str(context), "pong") == 0);
