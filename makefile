@@ -13,7 +13,7 @@ UNAME=uname
 .PHONY: win32_dll win32_lib
 .PHONY: gen_arch_objs
 .PHONY: release_win32_gcc release_arch_objs release_source
-.PHONY: sample
+.PHONY: sample test
 .PHONY: install
 .VPATH: ./ ./source ./source/arch/i386 ./source/arch/x86_64
 
@@ -110,6 +110,9 @@ win32_lib: $(TARGET_STATIC)
 sample: $(TARGET_STATIC)
 	make -C sample
 
+test: $(TARGET_STATIC)
+	make -C test
+
 $(TARGET_STATIC): $(OBJECT)
 	$(AR) crv $(TARGET_STATIC) $(OBJECT)
 
@@ -127,6 +130,7 @@ install: $(TARGET_STATIC)
 
 clean:
 	@make -C sample clean
+	@make -C test clean
 	@rm -f $(OBJECT)
 	@rm -f *~
 	@rm -f makefile~
