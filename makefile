@@ -1,6 +1,6 @@
 #
 #  libconcurrent
-#  Copyright (C) 2010-2013 MIURA Shirow (sharow)
+#  Copyright (C) 2010-2014 MIURA Shirow (sharow)
 #
 
 CC=$(PREFIX)gcc
@@ -11,8 +11,7 @@ UNAME=uname
 .SUFFIXES: .c .a .o .h .asm
 .PHONY: clean help
 .PHONY: win32_dll win32_lib
-.PHONY: gen_arch_objs
-.PHONY: release_win32_gcc release_arch_objs release_source
+.PHONY: release_win32
 .PHONY: sample test
 .PHONY: install
 .VPATH: ./ ./source ./source/arch/i386 ./source/arch/x86_64
@@ -29,6 +28,11 @@ endif
 
 NASM_FLAGS=
 ifeq ($(SYSTEM),Cygwin)
+ NASM_FLAGS+=-f win$(ARCH_BITS)
+ ifeq ($(ARCH),i686)
+  NASM_FLAGS+=--prefix _
+ endif
+else ifeq ($(SYSTEM),Msys)
  NASM_FLAGS+=-f win$(ARCH_BITS)
  ifeq ($(ARCH),i686)
   NASM_FLAGS+=--prefix _
@@ -53,7 +57,6 @@ else ifeq ($(ARCH),armv6l)
 else
  ARCH_BITS=32
 endif
-
 
 
 ifeq ($(DESTDIR),)
@@ -90,7 +93,7 @@ LDFLAGS_SHARED+=--output-def=libconcurrent.def
 
 TARGET_STATIC=libconcurrent.a
 TARGET_DYNAMIC=libconcurrent.dll
-INCDIR+=-I./
+INCDIR+=-I.
 INCDIR+=-I./include
 INCDIR+=-I./source
 
@@ -121,7 +124,7 @@ $(TARGET_DYNAMIC): $(OBJECT)
 	$(LD) -s $(LDFLAGS) $(LDFLAGS_SHARED) $(OBJECT) -o $(TARGET_DYNAMIC) win32_dll_main_crt_startup.o
 
 help:
-	@echo "clean help win32_dll win32_lib release_win32_gcc sample"
+	@echo "clean help win32_dll win32_lib release_win32 sample"
 
 install: $(TARGET_STATIC)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
@@ -142,7 +145,7 @@ clean:
 	@rm -f libconcurrent.def libconcurrent.dll.a
 	@rm -rf arch_objs
 
-release_win32_gcc: clean win32_lib win32_dll
+release_win32: clean win32_lib win32_dll
 	mkdir -p lib
 	cp -f libconcurrent.a lib/
 	mkdir -p dll
@@ -150,17 +153,8 @@ release_win32_gcc: clean win32_lib win32_dll
 	cp -f libconcurrent.dll.a dll/
 	cp -f libconcurrent.def dll/
 	cp -f ./concurrent_build_config.h dll/
-	tar -czf libconcurrent-win32-gcc-$(VERSION).tar.gz LICENSE include lib dll
+	tar -czf libconcurrent-win32-$(VERSION).tar.gz LICENSE include lib dll
 	rm -rf ./lib ./dll
-
-ARCH_SOURCE_i686=source/arch/i686/concurrent_arch.asm
-ARCH_SOURCE_x86_64=source/arch/x86_64/concurrent_arch.asm
-
-release_arch_objs: gen_arch_objs
-	tar -czf libconcurrent-arch_objs-$(VERSION).tar.gz arch_objs LICENSE
-
-release_source:
-	hg archive -t tgz libconcurrent-$(VERSION).tar.gz -p libconcurrent-$(VERSION)
 
 # suffix rule
 .c.o:
