@@ -78,7 +78,7 @@ $ # and get libconcurrent.a
 ```
 
 
-## Licence
+## License
 [zlib](http://www.zlib.net/zlib_license.html)
 
 
