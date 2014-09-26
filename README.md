@@ -79,7 +79,7 @@ $ # and get libconcurrent.a
 
 
 ## License
-[zlib](http://www.zlib.net/zlib_license.html)
+[zlib](https://github.com/sharow/libconcurrent/blob/master/LICENSE)
 
 
 ## VS. 
