@@ -1,14 +1,23 @@
 /* -*- Mode: c; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
+#define _GNU_SOURCE
+#include <features.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "concurrent/concurrent.h"
 
 /* short name API alias */
 #include "concurrent/short_lower_case_api.h"
 
 #define MS 1
-#define TIME_SLICE (50 / MS)
+#define TIME_SLICE (20 / MS)
+
+const struct timespec g_sleep_ts = {
+    .tv_sec = 0,
+    .tv_nsec = 1000 * 1000 * 10
+};
 
 void task0(ConcurrentContext *aContext)
 {
@@ -16,11 +25,13 @@ void task0(ConcurrentContext *aContext)
     clk = clock();
     for (;;) {
         printf("A");
-        if (((clock() - clk) * 1000 / CLOCKS_PER_SEC) > TIME_SLICE) {
+        fflush(stdout);
+        if (((clock() - clk) * 1000.0 / CLOCKS_PER_SEC) > TIME_SLICE) {
             printf("\ntask0: yield\n");
             yield(aContext);
             clk = clock();
         }
+        nanosleep(&g_sleep_ts, NULL);
     }
 }
 
@@ -30,11 +41,13 @@ void task1(ConcurrentContext *aContext)
     clk = clock();
     for (;;) {
         printf("B");
-        if (((clock() - clk) * 1000 / CLOCKS_PER_SEC) > TIME_SLICE) {
+        fflush(stdout);
+        if (((clock() - clk) * 1000.0 / CLOCKS_PER_SEC) > TIME_SLICE) {
             printf("\ntask1: yield\n");
             yield(aContext);
             clk = clock();
         }
+        nanosleep(&g_sleep_ts, NULL);
     }
 }
 
@@ -58,7 +71,7 @@ int main(void)
 
     {
         int i;
-        for (i = 0; i < 30; i++) {
+        for (i = 0; i < 10; i++) {
             printf("main: resume task0\n");
             ctx_resume(context0);
             printf("main: resume task1\n");
