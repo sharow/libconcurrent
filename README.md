@@ -9,7 +9,7 @@ tiny asymmetric-coroutine library.
 + native context switch
 + avoid another-lib dependency
 + platform
- + Linux i686, X86_64, ARMv6(exclude VFP/NEON)
+ + Linux i686, X86_64, ARMv6(RaspberryPi, etc)
  + Windows i686 (mingw only)
 
 
