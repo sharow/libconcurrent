@@ -1,7 +1,7 @@
 @ -*- Mode: text; tab-width: 4; indent-tabs-mode: nil; -*-
 @
 @  libconcurrent
-@  Copyright (C) 2010-2013 MIURA Shirow (sharow)
+@  Copyright (C) 2010-2015 MIURA Shirow (sharow)
 @
 @ for ARMv6
 @ assemble with: GNU as
@@ -33,6 +33,7 @@ ConcurrentArch_SetupExecutionContext:
     mov sp, r3          @ change stack
 
     @ push initial register values
+    stmfd sp!, {r0}     @ for EABI stack alignment(64bit)
     stmfd sp!, {r0}     @ aContext for ConcurrentArch_ReturnAtProcedure
 
     ldr r3, [r1, #+0]   @ ConcurrentContext_Offsetof_Procedure
@@ -49,7 +50,7 @@ ConcurrentArch_SetupExecutionContext:
     stmfd sp!, {r3}     @ r5
     stmfd sp!, {r3}     @ r4
 
-    fstmfds sp!, {s0-s31}  @ push garbages
+    vpush {d0-d15}
 
     ldr r3, [r1, #+4]   @ ConcurrentContext_Offsetof_StackPointer
     str sp, [r0, r3]    @ save to mStackPointer
@@ -65,13 +66,13 @@ ConcurrentArch_TrampolineToProcedure:
     @ r0 = aContext
 
     stmfd sp!, {r4-r11, lr}
-    fstmfds sp!, {s0-s31}
+    vpush {d0-d15}
 
     ldr r1, global_var
 
     @ save Return Address
     ldr r2, [r1, #+8]   @ ConcurrentContext_Offsetof_CallerReturnAddress
-    str lr, [r0, r2]    @ mCallerReturnAddress = lr
+    str lr, [r0, r2]    @ lr = mCallerReturnAddress
 
     @ exchange stack
     ldr r2, [r1, #+4]   @ ConcurrentContext_Offsetof_StackPointer
@@ -80,7 +81,8 @@ ConcurrentArch_TrampolineToProcedure:
     mov sp, r3          @ sp = r3
 
     adr lr, ConcurrentArch_ReturnAtProcedure
-    fldmfds sp!, {s0-s31}
+
+    vpop {d0-d15}
     ldmfd sp!, {r4-r11, pc}
 
 @
@@ -90,7 +92,7 @@ ConcurrentArch_TrampolineToCaller:
     @ r0 = aContext
 
     stmfd sp!, {r4-r11, lr}
-    fstmfds sp!, {s0-s31}
+    vpush {d0-d15}
 
     ldr r1, global_var
 
@@ -100,7 +102,7 @@ ConcurrentArch_TrampolineToCaller:
     str sp, [r0, r2]    @ mStackPointer = sp
     mov sp, r3          @ sp = r3
 
-    fldmfds sp!, {s0-s31}
+    vpop {d0-d15}
     ldmfd sp!, {r4-r11, pc}
 
 
@@ -114,7 +116,7 @@ ConcurrentArch_ReturnAtProcedure:
     ldr r3, [r0, r2]    @ r3 = mStackPointer
     mov sp, r3          @ sp = r3
 
-    fldmfds sp!, {s0-s31}
+    vpop {d0-d15}
     ldmfd sp!, {r4-r11, pc}
 
 
