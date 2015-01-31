@@ -1,7 +1,7 @@
 /* -*- Mode: c; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
 /*
   libconcurrent
-  Copyright (C) 2010-2013 MIURA Shirow (sharow)
+  Copyright (C) 2010-2015 MIURA Shirow (sharow)
 */
 
 #ifdef CONCURRENT_HAS_BUILD_CONFIG
@@ -157,7 +157,7 @@ Concurrent_GetModuleInfo(int *outVersionMajor,
     if (outMinimumStackSize) *outMinimumStackSize = (unsigned long)CONCURRENT_MIN_STACK_SIZE;
 
     if (outLicenseName) *outLicenseName = "zlib License";
-    if (outProjectURL) *outProjectURL = "http://code.google.com/p/libconcurrent/";
+    if (outProjectURL) *outProjectURL = "https://github.com/sharow/libconcurrent";
     if (outBuildDateTime) {
 #ifdef __DATE__
 # ifdef __TIME__
