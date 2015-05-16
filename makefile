@@ -10,8 +10,7 @@ UNAME=uname
 
 .SUFFIXES: .c .a .o .h .asm
 .PHONY: clean help
-.PHONY: win32_dll win32_lib
-.PHONY: release_win32
+.PHONY: win32_lib
 .PHONY: sample test
 .PHONY: install
 .VPATH: ./ ./source ./source/arch/i386 ./source/arch/x86_64
@@ -84,21 +83,8 @@ endif
 
 LDFLAGS+=--version-exports-section="$(VERSION)"
 
-ifeq ($(ARCH),x86_64)
-LDFLAGS_SHARED+=-entry=DllMainCRTStartup@12
-else
-LDFLAGS_SHARED+=-entry=_DllMainCRTStartup@12
-endif
-LDFLAGS_SHARED+=-shared
-LDFLAGS_SHARED+=--enable-auto-image-base
-LDFLAGS_SHARED+=--dll
-LDFLAGS_SHARED+=--no-seh
-LDFLAGS_SHARED+=--subsystem=windows
-LDFLAGS_SHARED+=--out-implib=libconcurrent.dll.a
-LDFLAGS_SHARED+=--output-def=libconcurrent.def
 
 TARGET_STATIC=libconcurrent.a
-TARGET_DYNAMIC=libconcurrent.dll
 INCDIR+=-I.
 INCDIR+=-I./include
 INCDIR+=-I./source
@@ -112,8 +98,6 @@ OBJECT+=$(OBJECT_ARCH)
 
 all: $(TARGET_STATIC)
 
-win32_dll: $(TARGET_DYNAMIC)
-
 win32_lib: $(TARGET_STATIC)
 
 sample: $(TARGET_STATIC)
@@ -125,12 +109,8 @@ test: $(TARGET_STATIC)
 $(TARGET_STATIC): $(OBJECT)
 	$(AR) crv $(TARGET_STATIC) $(OBJECT)
 
-$(TARGET_DYNAMIC): $(OBJECT)
-	$(CC) -c $(CFLAGS) win32_dll_main_crt_startup.c
-	$(LD) -s $(LDFLAGS) $(LDFLAGS_SHARED) $(OBJECT) -o $(TARGET_DYNAMIC) win32_dll_main_crt_startup.o
-
 help:
-	@echo "clean help win32_dll win32_lib release_win32 sample"
+	@echo "clean help win32_lib sample"
 
 install: $(TARGET_STATIC)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
@@ -141,26 +121,7 @@ clean:
 	@make -C sample clean
 	@make -C test clean
 	@rm -f $(OBJECT)
-	@rm -f *~
-	@rm -f makefile~
-	@rm -f source/*~
-	@rm -f source/arch/i386/*~
-	@rm -f include/concurrent/*~
-	@rm -f win32_dll_main_crt_startup.o
-	@rm -f $(TARGET_DYNAMIC) $(TARGET_STATIC)
-	@rm -f libconcurrent.def libconcurrent.dll.a
-	@rm -rf arch_objs
-
-release_win32: clean win32_lib win32_dll
-	mkdir -p lib
-	cp -f libconcurrent.a lib/
-	mkdir -p dll
-	cp -f libconcurrent.dll dll/
-	cp -f libconcurrent.dll.a dll/
-	cp -f libconcurrent.def dll/
-	cp -f ./concurrent_build_config.h dll/
-	tar -czf libconcurrent-win32-$(VERSION).tar.gz LICENSE include lib dll
-	rm -rf ./lib ./dll
+	@rm -f $(TARGET_STATIC)
 
 # suffix rule
 .c.o:
