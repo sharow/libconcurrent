@@ -51,6 +51,12 @@ ifeq ($(ARCH),i686)
 else ifeq ($(ARCH),x86_64)
  ARCH_BITS=64
 else ifeq ($(ARCH),armv6l)
+ ARCH=arm
+ ARCH_BITS=32
+ AS=as
+ ASFLAGS=
+else ifeq ($(ARCH),armv7l)
+ ARCH=arm
  ARCH_BITS=32
  AS=as
  ASFLAGS=
