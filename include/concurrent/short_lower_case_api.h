@@ -12,6 +12,7 @@
 #define concurrent_init Concurrent_Initialize
 #define concurrent_fin Concurrent_Finalize
 #define concurrent_get_status_str Concurrent_GetStatusString
+#define concurrent_get_stackdirection Concurrent_GetStackDirection
 #define concurrent_get_module_info Concurrent_GetModuleInfo
 #define ctx_sizeof ConcurrentContext_SizeOf
 #define ctx_construct ConcurrentContext_Construct
