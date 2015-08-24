@@ -126,14 +126,14 @@ Concurrent_GetStackDirection(int iter)
 {
 	// 1 = grows downward
 	// 0 = grows upward
-	static unsigned long baseptr;
-	int depth;
-	if ( iter == 0 ) baseptr = (unsigned long) &depth;
-	if ( iter < 10 ) {
-		Concurrent_GetStackDirection(iter + 1);
-	} else {
-		return ( (unsigned long)&depth + (baseptr - (unsigned long)&depth) == baseptr ? 1 : 0  );
-	}
+    static unsigned long baseptr;
+    int depth;
+    if ( iter == 0 ) baseptr = (unsigned long) &depth;
+    if ( iter < 10 ) {
+        Concurrent_GetStackDirection(iter + 1);
+    } else {
+        return ( (unsigned long)&depth + (baseptr - (unsigned long)&depth) == baseptr ? 1 : 0  );
+    }
 }
 
 CONCURRENT_API void
