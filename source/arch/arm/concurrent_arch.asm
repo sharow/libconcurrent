@@ -70,10 +70,6 @@ ConcurrentArch_TrampolineToProcedure:
 
     ldr r1, global_var
 
-    @ save Return Address
-    ldr r2, [r1, #+8]   @ ConcurrentContext_Offsetof_CallerReturnAddress
-    str lr, [r0, r2]    @ mCallerReturnAddress = lr
-
     @ exchange stack
     ldr r2, [r1, #+4]   @ ConcurrentContext_Offsetof_StackPointer
     ldr r3, [r0, r2]    @ r3 = mStackPointer
