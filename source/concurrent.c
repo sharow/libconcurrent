@@ -120,6 +120,22 @@ Concurrent_GetStatusString(ConcurrentStatus aStatus)
     return status_strs[aStatus];
 }
 
+#pragma GCC diagnostic ignored "-Wreturn-type"
+CONCURRENT_API int
+Concurrent_GetStackDirection(int iter)
+{
+	// 1 = grows downward
+	// 0 = grows upward
+	static unsigned long baseptr;
+	int depth;
+	if ( iter == 0 ) baseptr = (unsigned long) &depth;
+	if ( iter < 10 ) {
+		Concurrent_GetStackDirection(iter + 1);
+	} else {
+		return ( (unsigned long)&depth + (baseptr - (unsigned long)&depth) == baseptr ? 1 : 0  );
+	}
+}
+
 CONCURRENT_API void
 Concurrent_GetModuleInfo(int *outVersionMajor,
                          int *outVersionMinor,
@@ -153,7 +169,7 @@ Concurrent_GetModuleInfo(int *outVersionMajor,
         *outIsDebugBuild = 0;
 #endif
     }
-    if (outIsStackGrowthDownward) *outIsStackGrowthDownward = 1; /* TODO */
+    if (outIsStackGrowthDownward) *outIsStackGrowthDownward = Concurrent_GetStackDirection(0);
     if (outMinimumStackSize) *outMinimumStackSize = (unsigned long)CONCURRENT_MIN_STACK_SIZE;
 
     if (outLicenseName) *outLicenseName = "zlib License";
