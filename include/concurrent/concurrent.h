@@ -55,6 +55,9 @@ Concurrent_Finalize(void);
 CONCURRENT_API const char *
 Concurrent_GetStatusString(ConcurrentStatus aStatus);
 
+CONCURRENT_API int
+Concurrent_GetStackDirection(int);
+
 CONCURRENT_API void
 Concurrent_GetModuleInfo(int *outVersionMajor,
                          int *outVersionMinor,
