@@ -13,7 +13,7 @@ UNAME=uname
 .PHONY: win32_lib
 .PHONY: sample test
 .PHONY: install
-.VPATH: ./ ./source ./source/arch/i386 ./source/arch/x86_64
+.VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
 
 VERSION=0.3.0
 
@@ -87,12 +87,12 @@ LDFLAGS+=--version-exports-section="$(VERSION)"
 TARGET_STATIC=libconcurrent.a
 INCDIR+=-I.
 INCDIR+=-I./include
-INCDIR+=-I./source
+INCDIR+=-I./src
 
-SOURCE_ARCH=source/arch/$(ARCH)/concurrent_arch.asm
-OBJECT_ARCH=source/arch/$(ARCH)/concurrent_arch.o
+SOURCE_ARCH=src/arch/$(ARCH)/concurrent_arch.asm
+OBJECT_ARCH=src/arch/$(ARCH)/concurrent_arch.o
 
-SOURCE+=source/concurrent.c
+SOURCE+=src/concurrent.c
 OBJECT=$(subst .c,.o, $(SOURCE))
 OBJECT+=$(OBJECT_ARCH)
 
