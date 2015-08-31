@@ -10,7 +10,6 @@ UNAME=uname
 
 .SUFFIXES: .c .a .o .h .asm
 .PHONY: clean help
-.PHONY: win32_lib
 .PHONY: sample test
 .PHONY: install
 .VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
@@ -99,8 +98,6 @@ OBJECT+=$(OBJECT_ARCH)
 
 all: $(TARGET)
 
-win32_lib: $(TARGET)
-
 sample: $(TARGET)
 	make -C sample
 
@@ -111,7 +108,7 @@ $(TARGET): $(OBJECT)
 	$(AR) crv $(TARGET) $(OBJECT)
 
 help:
-	@echo "clean help win32_lib sample"
+	@echo "clean help sample test"
 
 install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
