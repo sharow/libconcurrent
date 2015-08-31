@@ -85,7 +85,7 @@ endif
 LDFLAGS+=--version-exports-section="$(VERSION)"
 
 
-TARGET_STATIC=libconcurrent.a
+TARGET=libconcurrent.a
 INCDIR+=-I.
 INCDIR+=-I./include
 INCDIR+=-I./src
@@ -97,23 +97,23 @@ SOURCE+=src/concurrent.c
 OBJECT=$(subst .c,.o, $(SOURCE))
 OBJECT+=$(OBJECT_ARCH)
 
-all: $(TARGET_STATIC)
+all: $(TARGET)
 
-win32_lib: $(TARGET_STATIC)
+win32_lib: $(TARGET)
 
-sample: $(TARGET_STATIC)
+sample: $(TARGET)
 	make -C sample
 
-test: $(TARGET_STATIC)
+test: $(TARGET)
 	make -C test
 
-$(TARGET_STATIC): $(OBJECT)
-	$(AR) crv $(TARGET_STATIC) $(OBJECT)
+$(TARGET): $(OBJECT)
+	$(AR) crv $(TARGET) $(OBJECT)
 
 help:
 	@echo "clean help win32_lib sample"
 
-install: $(TARGET_STATIC)
+install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
 	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)/usr/include/concurrent/concurrent.h
 	install -Dm644 include/concurrent/short_lower_case_api.h $(DESTDIR)/usr/include/concurrent/short_lower_case_api.h
@@ -122,7 +122,7 @@ clean:
 	@make -C sample clean
 	@make -C test clean
 	@rm -f $(OBJECT)
-	@rm -f $(TARGET_STATIC)
+	@rm -f $(TARGET)
 
 # suffix rule
 .c.o:
