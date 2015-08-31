@@ -73,6 +73,7 @@ CFLAGS+=-DCONCURRENT_ARCH_NAME='"$(ARCH)"'
 CFLAGS+=-Wall
 CFLAGS+=-std=c99
 CFLAGS+=-Wstrict-aliasing
+CFLAGS+=-fno-stack-protector  # for Ubuntu gcc patch
 
 ifeq ($(DEBUG),yes)
  CFLAGS+=-DCONCURRENT_DEBUG
