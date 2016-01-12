@@ -96,7 +96,7 @@ $ make test
 
 ## Benchmark
 
-example/many_context1.c:
+examples/many_context1.c:
 
 ```
 -- output: (Xeon E3 2.5Ghz)
