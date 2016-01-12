@@ -54,7 +54,6 @@ int main(void)
         
     }
     ctx_destruct(ctx);
-    free(ctx);
     concurrent_fin();
     return EXIT_SUCCESS;
 }
