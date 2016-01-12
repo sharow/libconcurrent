@@ -14,7 +14,7 @@ UNAME=uname
 .PHONY: install
 .VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
 
-VERSION=0.3.0
+VERSION=0.4.0
 
 ifeq ($(ARCH),)
  ARCH=$(shell $(UNAME) -m)
@@ -63,14 +63,8 @@ else
 endif
 
 
-ifeq ($(DESTDIR),)
-  DESTDIR=./pkg
-endif
-
-CFLAGS+=-DCONCURRENT_HAS_BUILD_CONFIG # ./concurrent_build_config.h
-CFLAGS+=-DCONCURRENT_ARCH_NAME='"$(ARCH)"'
 CFLAGS+=-Wall
-CFLAGS+=-std=c99
+CFLAGS+=-std=c11
 CFLAGS+=-Wstrict-aliasing
 CFLAGS+=-fno-stack-protector  # for Ubuntu gcc patch
 
@@ -93,7 +87,7 @@ SOURCE_ARCH=src/arch/$(ARCH)/concurrent_arch.asm
 OBJECT_ARCH=src/arch/$(ARCH)/concurrent_arch.o
 
 SOURCE+=src/concurrent.c
-OBJECT=$(subst .c,.o, $(SOURCE))
+OBJECT+=$(subst .c,.o, $(SOURCE))
 OBJECT+=$(OBJECT_ARCH)
 
 all: $(TARGET)
@@ -113,7 +107,7 @@ help:
 install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
 	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)/usr/include/concurrent/concurrent.h
-	install -Dm644 include/concurrent/short_lower_case_api.h $(DESTDIR)/usr/include/concurrent/short_lower_case_api.h
+	install -Dm644 include/concurrent/shortname.h $(DESTDIR)/usr/include/concurrent/shortname.h
 
 clean:
 	@make -C sample clean
