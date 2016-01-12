@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 CFLAGS+=-Wall
-CFLAGS+=-std=c99
+CFLAGS+=-std=c11
 
 ifeq ($(DEBUG),yes)
  CFLAGS+=-g -ggdb
