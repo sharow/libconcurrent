@@ -168,22 +168,6 @@ concurrent_get_yield_value(struct concurrent_ctx *ctx)
     return ctx->yield_value;
 }
 
-/*
-ConcurrentContext_YieldVoid(ConcurrentContext *aContext)
-{
-    aContext->mGeneratorValue.mType = ConcurrentGeneratorValueType_VOID;
-    return ConcurrentContext_Yield(aContext);
-}
-
-CONCURRENT_API ConcurrentStatus
-ConcurrentContext_YieldVoidPtr(ConcurrentContext *aContext, void *aValue)
-{
-    aContext->mGeneratorValue.mType = ConcurrentGeneratorValueType_VOIDPTR;
-    aContext->mGeneratorValue.uValue.mVoidPtr = aValue;
-    return ConcurrentContext_Yield(aContext);
-}
-*/
-
 void
 concurrent_reset(struct concurrent_ctx *ctx)
 {
@@ -216,7 +200,6 @@ concurrent_get_stack_used(struct concurrent_ctx *ctx)
     }
     return (size_t)(ctx->stack_base - ctx->stack_ptr);
 }
-
 
 static void
 concurrent_setup_execution_context(struct concurrent_ctx *ctx)
