@@ -13,7 +13,7 @@ tiny asymmetric-coroutine library.
  + Windows i686 (mingw only)
 
 
-## Sample
+## Code Example
 
 ```c
 #include <stdio.h>
@@ -74,11 +74,11 @@ $ ./sample
 */
 ```
 
-## Requirement
+## Requirement for build
 - nasm: http://www.nasm.us/
 
 
-## Install
+## Installation
 ```
 $ git clone git@github.com:sharow/libconcurrent.git libconcurrent
 $ cd libconcurrent
@@ -87,6 +87,11 @@ $ sudo make install
 
 ```
 
+## Tests
+```
+$ make test
+
+```
 
 ## License
 [zlib](https://github.com/sharow/libconcurrent/blob/master/LICENSE)
