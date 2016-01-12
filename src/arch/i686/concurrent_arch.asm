@@ -11,29 +11,29 @@
 
 section .text
 
-global ConcurrentArch_SetupExecutionContext
-global ConcurrentArch_TrampolineToProcedure
-global ConcurrentArch_TrampolineToCaller
+global concurrent_arch_setup_execution_context
+global concurrent_arch_trampoline_to_procedure
+global concurrent_arch_trampoline_to_caller
 
-global ConcurrentContext_Offsetof_Procedure
-global ConcurrentContext_Offsetof_StackPointer
-global ConcurrentContext_Offsetof_CallerReturnAddress
+global concurrent_offsetof_procedure
+global concurrent_offsetof_stack_ptr
+global concurrent_offsetof_caller_return_addr
 
 
 ;;
-;; void ConcurrentArch_SetupExecutionContext(ConcurrentContext *aContext)
+;; void concurrent_arch_setup_execution_context(struct concurrent_ctx *ctx)
 ;;
-ConcurrentArch_SetupExecutionContext:
-    mov ecx, dword [esp + 4]    ; aContext
+concurrent_arch_setup_execution_context:
+    mov ecx, dword [esp + 4]    ; ctx
 
-    mov eax, dword [ConcurrentContext_Offsetof_StackPointer]
+    mov eax, dword [concurrent_offsetof_stack_ptr]
     xchg esp, dword [ecx + eax] ; exchange stack
 
-    push ecx                                 ; aContext for "return" or out of scope
-    push ecx                                 ; aContext for yield
-    push ConcurrentArch_TrampolineToCaller  ; return to ConcurrentArch_TrampolineToCaller(aContext)
+    push ecx                                 ; ctx for "return" or out of scope
+    push ecx                                 ; ctx for yield
+    push concurrent_arch_trampoline_to_caller  ; return to concurrent_arch_trampoline_to_caller(ctx)
 
-    mov eax, dword [ConcurrentContext_Offsetof_Procedure]
+    mov eax, dword [concurrent_offsetof_procedure]
     push dword [ecx + eax] ; entry point
 
     ; initial register value
@@ -43,17 +43,17 @@ ConcurrentArch_SetupExecutionContext:
     push eax  ; edi
     push eax  ; ebp
 
-    mov eax, dword [ConcurrentContext_Offsetof_StackPointer]
+    mov eax, dword [concurrent_offsetof_stack_ptr]
     xchg esp, dword [ecx + eax] ; restore stack
 
     ret
 
 
 ;;
-;; void ConcurrentArch_TrampolineToProcedure(ConcurrentContext *aContext)
+;; void concurrent_arch_trampoline_to_procedure(struct concurrent_ctx *ctx)
 ;;
-ConcurrentArch_TrampolineToProcedure:
-    mov ecx, dword [esp + 4]    ; aContext
+concurrent_arch_trampoline_to_procedure:
+    mov ecx, dword [esp + 4]    ; ctx
 
     push ebx
     push esi
@@ -62,11 +62,11 @@ ConcurrentArch_TrampolineToProcedure:
 
     ; save return address
     mov edx, dword [esp + 16]      ; return address of this function
-    mov eax, dword [ConcurrentContext_Offsetof_CallerReturnAddress]
+    mov eax, dword [concurrent_offsetof_caller_return_addr]
     mov dword [ecx + eax], edx
 
     ; exchange stack
-    mov eax, dword [ConcurrentContext_Offsetof_StackPointer]
+    mov eax, dword [concurrent_offsetof_stack_ptr]
     xchg esp, dword [ecx + eax]
     nop
 
@@ -80,12 +80,12 @@ ConcurrentArch_TrampolineToProcedure:
 
 
 ;;
-;; void ConcurrentArch_TrampolineToCaller(ConcurrentContext *aContext)
+;; void concurrent_arch_trampoline_to_caller(struct concurrent_ctx *ctx)
 ;;
-ConcurrentArch_TrampolineToCaller:
+concurrent_arch_trampoline_to_caller:
     ;; 2 ways: function-call or return from procedure("return" in procedure or out of scope).
 
-    mov ecx, dword [esp + 4]   ; aContext
+    mov ecx, dword [esp + 4]   ; ctx
 
     push ebx
     push esi
@@ -93,12 +93,12 @@ ConcurrentArch_TrampolineToCaller:
     push ebp
 
     ; exchange stack
-    mov eax, dword [ConcurrentContext_Offsetof_StackPointer]
+    mov eax, dword [concurrent_offsetof_stack_ptr]
     xchg dword [ecx + eax], esp
     nop
 
     ; get return address
-    mov eax, dword [ConcurrentContext_Offsetof_CallerReturnAddress]
+    mov eax, dword [concurrent_offsetof_caller_return_addr]
     mov eax, dword [ecx + eax]
 
     pop ebp
@@ -113,7 +113,6 @@ ConcurrentArch_TrampolineToCaller:
 
 
 section .data
-
-ConcurrentContext_Offsetof_Procedure           dd 0
-ConcurrentContext_Offsetof_StackPointer        dd 0
-ConcurrentContext_Offsetof_CallerReturnAddress dd 0
+concurrent_offsetof_procedure          dd 0
+concurrent_offsetof_stack_ptr          dd 0
+concurrent_offsetof_caller_return_addr dd 0
