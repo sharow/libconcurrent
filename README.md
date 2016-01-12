@@ -75,8 +75,9 @@ $ ./sample
 */
 ```
 
-## Requirement for build
+## Requirements for build
 - nasm: http://www.nasm.us/
+- ... and of course GCC or clang
 
 
 ## Installation
