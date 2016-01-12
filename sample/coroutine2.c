@@ -13,17 +13,19 @@ void coro(struct concurrent_ctx *ctx)
     struct concurrent_ctx *ctx2;
     uint8_t *stack;
     int deep;
-
-    deep = (int)ctx_get_user_ptr(ctx);
+    int next_deep;
+    
+    deep = *(int *)ctx_get_user_ptr(ctx);
     if (deep == 0) {
         return;
     }
+    next_deep = deep - 1;
 
     printf("%*scoro(deep=%d) start\n", deep, " ", deep);
 
     ctx2 = malloc(ctx_sizeof());
     stack = malloc(sizeof(*stack) * STACK_SIZE);
-    ctx_construct(ctx2, stack, STACK_SIZE, coro, (void *)(deep - 1));
+    ctx_construct(ctx2, stack, STACK_SIZE, coro, &next_deep);
     while (!ctx_is_done(ctx2)) {
         printf("%*scoro(deep=%d) first\n", deep, " ", deep);
         resume(ctx2);
@@ -45,11 +47,12 @@ int main(void)
 {
     struct concurrent_ctx *ctx;
     uint8_t *stack;
+    int deep = 3;
 
     concurrent_init();
     ctx = malloc(ctx_sizeof());
     stack = malloc(sizeof(*stack) * STACK_SIZE);
-    ctx_construct(ctx, stack, STACK_SIZE, coro, /* deep = */(void *)3);
+    ctx_construct(ctx, stack, STACK_SIZE, coro, &deep);
     while (!ctx_is_done(ctx)) {
         printf("main()\n");
         resume(ctx);
