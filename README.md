@@ -94,6 +94,23 @@ $ make test
 
 ```
 
+## Benchmark
+
+example/many_context1.c:
+
+```
+-- output: (Xeon E3 2.5Ghz)
+3000000 context switch in 373.5 ms
+one context switch in 125 ns
+8031333 resume/yield pair per second
+
+
+-- output: (RaspberryPi2 ARMv7 900MHz)
+3000000 context switch in 2861.8 ms
+one context switch in 954 ns
+1048287 resume/yield pair per second
+```
+
 ## License
 [zlib](https://github.com/sharow/libconcurrent/blob/master/LICENSE)
 
