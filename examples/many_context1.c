@@ -6,8 +6,8 @@
 #include <concurrent/concurrent.h>
 #include <concurrent/shortname.h>
 
-#define NUM_CONTEXT 100000
-#define NUM_LOOP 30
+#define NUM_CONTEXT 10000
+#define NUM_LOOP 300
 
 void coro(struct concurrent_ctx *ctx)
 {
@@ -50,7 +50,7 @@ int main(void)
     diff_time = (clock2 - clock1) / (double)CLOCKS_PER_SEC;
     printf("%d context switch in %.1f ms\n", NUM_LOOP * NUM_CONTEXT, diff_time * 1000);
     printf("one context switch in %.0f ns\n", (diff_time * 1000000000) / (NUM_LOOP * NUM_CONTEXT));
-    printf("context switch about %.0f times in 1 sec\n", NUM_LOOP * NUM_CONTEXT * (1.0 / diff_time));
+    printf("%.0f resume/yield pair per second\n", NUM_LOOP * NUM_CONTEXT * (1.0 / diff_time));
 
     /* destruct */
     for (i = NUM_CONTEXT-1; i >= 0; i--) {
@@ -63,13 +63,9 @@ int main(void)
 }
 
 /*
--- output: (on CoreSolo 1.06GHz)
-3000000 context switch in 1062.0 ms
-one context switch in 354 ns
-context switch about 2824859 times in 1 sec
+-- output: (Xeon E3 2.5Ghz)
+3000000 context switch in 373.5 ms
+one context switch in 125 ns
+8031333 resume/yield pair per second
 
--- output: (on RaspberryPi2 ARMv7 900MHz)
-3000000 context switch in 2819.6 ms
-one context switch in 940 ns
-context switch about 1063974 times in 1 sec
 */
