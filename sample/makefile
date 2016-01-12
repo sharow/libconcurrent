@@ -7,7 +7,7 @@
 .PHONY: all clean
 
 CFLAGS+=-Wall
-CFLAGS+=-std=c99
+CFLAGS+=-std=c11
 
 ifeq ($(DEBUG),yes)
  CFLAGS+=-g -ggdb
@@ -26,10 +26,8 @@ INCDIR+=-I../include
 SOURCE+=concurrent_sort1.c
 SOURCE+=coroutine1.c
 SOURCE+=coroutine2.c
-SOURCE+=generator1.c
-SOURCE+=generator2.c
+SOURCE+=accumlator.c
 SOURCE+=many_context1.c
-SOURCE+=get_module_info1.c
 SOURCE+=float1.c
 SOURCE+=float2.c
 SOURCE+=time_slice1.c

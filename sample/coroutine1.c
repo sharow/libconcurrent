@@ -1,38 +1,38 @@
 /* -*- Mode: c; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
 #include <stdio.h>
 #include <stdlib.h>
-#include "concurrent/concurrent.h"
+#include <stdnoreturn.h>
+#include <concurrent/concurrent.h>
+#include <concurrent/shortname.h>
 
-/* short name API alias */
-#include "concurrent/short_lower_case_api.h"
 
-void coro(ConcurrentContext *aContext)
+noreturn void coro(struct concurrent_ctx *ctx)
 {
     int i = 0;
     for (;;) {
         printf("coro: %d\n", i++);
-        yield(aContext);
+        yield(ctx);
     }
 }
 
 int main(void)
 {
-    ConcurrentContext *context;
-    unsigned char *stack;
+    struct concurrent_ctx *ctx;
+    uint8_t *stack;
+    const size_t stack_size = 1024*4;
     int i;
-    const int stack_size = 1024*4;
 
     concurrent_init();
-    context = malloc(ctx_sizeof());
+    ctx = malloc(concurrent_sizeof());
     stack = malloc(sizeof(*stack) * stack_size);
-    ctx_construct(context, stack, stack_size, coro, NULL);
+    ctx_construct(ctx, stack, stack_size, coro, NULL);
     for (i = 0; i < 10; i++) {
         printf("main: %d\n", i);
-        ctx_resume(context);
+        resume(ctx);
     }
-    ctx_destruct(context);
+    ctx_destruct(ctx);
     free(stack);
-    free(context);
+    free(ctx);
     concurrent_fin();
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -2,23 +2,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "concurrent/concurrent.h"
+#include <concurrent/concurrent.h>
+#include <concurrent/shortname.h>
 
-/* short name API alias */
-#include "concurrent/short_lower_case_api.h"
+struct sort_ctx {
+    int *data;
+    int num_data;
+};
 
-typedef struct {
-    int *mData;
-    int mNumData;
-} ConcurrentSortArg;
+struct concurrent_ctx *g_context;
 
-ConcurrentContext *g_context;
-
-void print_datas(ConcurrentSortArg *aSortArg)
+void print_datas(struct sort_ctx *sort_ctx)
 {
     int i;
-    for (i = 0; i < aSortArg->mNumData; i++) {
-        printf("%d ", aSortArg->mData[i]);
+    for (i = 0; i < sort_ctx->num_data; i++) {
+        printf("%d ", sort_ctx->data[i]);
     }
 }
 
@@ -40,47 +38,45 @@ int comp(const void *value0, const void *value1)
     return 0;
 }
 
-void coro(ConcurrentContext *aContext)
+void coro(struct concurrent_ctx *ctx)
 {
-    ConcurrentSortArg *arg;
-    arg = ctx_get_userptr(aContext);
+    struct sort_ctx *arg;
+    arg = ctx_get_user_ptr(ctx);
     printf("qsort start\n");
     yield(g_context);
-    qsort(arg->mData, arg->mNumData, sizeof(*arg->mData), comp);
+    qsort(arg->data, arg->num_data, sizeof(*arg->data), comp);
     yield(g_context);
     printf("qsort finish\n");
 }
 
 int main(void)
 {
-    unsigned char *stack;
+    uint8_t *stack;
     const int stack_size = 1024 * 4;
     int data[] = { 12, 13, 14, 15, 10, 9, 7, 1, 2, 11, 3, 4, 8, 6, 5, 0 };
-    ConcurrentSortArg sort_arg;
+    struct sort_ctx sort_arg;
 
-    sort_arg.mData = data;
-    sort_arg.mNumData =  sizeof(data) / sizeof(data[0]);
+    sort_arg.data = data;
+    sort_arg.num_data =  sizeof(data) / sizeof(data[0]);
 
     concurrent_init();
     g_context = malloc(ctx_sizeof());
     stack = malloc(sizeof(*stack) * stack_size);
     ctx_construct(g_context, stack, stack_size, coro, (void *)&sort_arg);
     while (!ctx_is_done(g_context)) {
-        unsigned long stack_size_used;
-        ctx_get_stack_used(g_context, &stack_size_used);
-        printf("stack used:%3ub(%2.0f%%); data={ ",
-               (unsigned int)stack_size_used,
-               ((float)stack_size_used / stack_size) * 100.0f);
+        size_t stack_size_used = ctx_get_stack_used(g_context);
+        printf("stack used:%3zdbytes(%2.0f%%); data={ ",
+               stack_size_used, ((float)stack_size_used / stack_size) * 100.0f);
         print_datas(&sort_arg);
         printf("}\n");
-        ctx_resume(g_context);
+        resume(g_context);
     }
 
     ctx_destruct(g_context);
     free(stack);
     free(g_context);
     concurrent_fin();
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 /* output:
