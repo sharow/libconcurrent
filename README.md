@@ -96,7 +96,7 @@ $ make test
 
 ## Benchmark
 
-examples/many_context1.c:
+[examples/many_context1.c](https://github.com/sharow/libconcurrent/blob/master/examples/many_context1.c):
 
 ```
 -- output: (Xeon E3 2.5Ghz)
