@@ -15,7 +15,7 @@ tiny asymmetric-coroutine library.
 
 ## Sample
 
-```
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdnoreturn.h>
