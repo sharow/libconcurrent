@@ -152,10 +152,10 @@ concurrent_get_resume_value(struct concurrent_ctx *ctx)
 void *
 concurrent_yield_with_value(struct concurrent_ctx *ctx, void *value)
 {
-    ctx->yield_value = value;
     if (ctx->state != CONCURRENT_STATE_EXECUTE) {
         panic();
     }
+    ctx->yield_value = value;
     ctx->state = CONCURRENT_STATE_YIELD;
     concurrent_arch_trampoline_to_caller(ctx);
     return ctx->resume_value;
