@@ -18,6 +18,7 @@ tiny asymmetric-coroutine library.
 ```c
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdnoreturn.h>
 
 #include <concurrent/concurrent.h>

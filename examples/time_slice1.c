@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdnoreturn.h>
 #include <time.h>
 #include <concurrent/concurrent.h>
