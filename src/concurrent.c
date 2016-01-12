@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdnoreturn.h>
 
 #include "concurrent/concurrent.h"
 #include "concurrent_arch.h"
@@ -39,6 +40,12 @@ struct concurrent_ctx {
 
 
 static void concurrent_setup_execution_context(struct concurrent_ctx *ctx);
+
+noreturn static void
+panic(void)
+{
+    abort();
+}
 
 
 void
@@ -126,7 +133,7 @@ concurrent_resume_with_value(struct concurrent_ctx *ctx, void *value)
     case CONCURRENT_STATE_EXECUTE:
     case CONCURRENT_STATE_DONE:
     default:
-        abort();
+        panic();
     }
     return NULL;
 }
@@ -136,7 +143,6 @@ concurrent_resume(struct concurrent_ctx *ctx)
 {
     return concurrent_resume_with_value(ctx, NULL);
 }
-
 void *
 concurrent_get_resume_value(struct concurrent_ctx *ctx)
 {
@@ -148,7 +154,7 @@ concurrent_yield_with_value(struct concurrent_ctx *ctx, void *value)
 {
     ctx->yield_value = value;
     if (ctx->state != CONCURRENT_STATE_EXECUTE) {
-        abort();
+        panic();
     }
     ctx->state = CONCURRENT_STATE_YIELD;
     concurrent_arch_trampoline_to_caller(ctx);
@@ -171,7 +177,7 @@ void
 concurrent_reset(struct concurrent_ctx *ctx)
 {
     if (ctx->state == CONCURRENT_STATE_EXECUTE) {
-        abort();
+        panic();
     }
     ctx->state = CONCURRENT_STATE_SETUP;
 }
@@ -195,7 +201,7 @@ concurrent_get_stack_used(struct concurrent_ctx *ctx)
         return 0;
     }
     if (ctx->state == CONCURRENT_STATE_EXECUTE) {
-        abort();
+        panic();
     }
     return (size_t)(ctx->stack_base - ctx->stack_ptr);
 }
