@@ -149,7 +149,6 @@ concurrent_yield_with_value(struct concurrent_ctx *ctx, void *value)
 {
     ctx->yield_value = value;
     if (ctx->state != CONCURRENT_STATE_EXECUTE) {
-        printf("*******!!!!\n");
         abort();
     }
     ctx->state = CONCURRENT_STATE_YIELD;
