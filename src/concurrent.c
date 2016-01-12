@@ -27,13 +27,13 @@ typedef enum {
 
 struct concurrent_ctx {
     concurrent_proc proc;
+    void *user_ptr;
     uint8_t *stack_buffer;
     size_t stack_size;
-    void *user_ptr;
     size_t stack_base;
     size_t stack_ptr;
-    void *caller_return_addr;
     concurrent_state state;
+    void *caller_return_addr;
     void *yield_value;
     void *resume_value;
 };
@@ -88,8 +88,8 @@ concurrent_construct(struct concurrent_ctx *ctx,
     ctx->stack_size = (stack_size + stack_buffer - ctx->stack_buffer) & ~15;
     ctx->stack_base = (size_t)(ctx->stack_buffer + ctx->stack_size);
     ctx->stack_ptr = 0;
-    ctx->caller_return_addr = NULL;
     ctx->state = CONCURRENT_STATE_SETUP;
+    ctx->caller_return_addr = NULL;
     ctx->yield_value = NULL;
     ctx->resume_value = NULL;
     return CONCURRENT_SUCCESS;
@@ -104,8 +104,8 @@ concurrent_destruct(struct concurrent_ctx *ctx)
     ctx->stack_size = 0;
     ctx->stack_base = 0;
     ctx->stack_ptr = 0;
-    ctx->caller_return_addr = NULL;
     ctx->state = CONCURRENT_STATE_DONE;
+    ctx->caller_return_addr = NULL;
     ctx->yield_value = NULL;
     ctx->resume_value = NULL;
 }
