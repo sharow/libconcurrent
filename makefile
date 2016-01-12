@@ -10,7 +10,7 @@ UNAME=uname
 
 .SUFFIXES: .c .a .o .h .asm
 .PHONY: clean help
-.PHONY: sample test
+.PHONY: examples test
 .PHONY: install
 .VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
 
@@ -92,8 +92,8 @@ OBJECT+=$(OBJECT_ARCH)
 
 all: $(TARGET)
 
-sample: $(TARGET)
-	make -C sample
+examples: $(TARGET)
+	make -C examples
 
 test: $(TARGET)
 	make -C test
@@ -102,7 +102,7 @@ $(TARGET): $(OBJECT)
 	$(AR) crv $(TARGET) $(OBJECT)
 
 help:
-	@echo "clean help sample test"
+	@echo "clean help examples test"
 
 install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
@@ -110,7 +110,7 @@ install: $(TARGET)
 	install -Dm644 include/concurrent/shortname.h $(DESTDIR)/usr/include/concurrent/shortname.h
 
 clean:
-	@make -C sample clean
+	@make -C examples clean
 	@make -C test clean
 	@rm -f $(OBJECT)
 	@rm -f $(TARGET)
