@@ -1,7 +1,7 @@
 ;; -*- Mode: text; tab-width: 4; indent-tabs-mode: nil; -*-
 ;;
 ;;  libconcurrent
-;;  Copyright (C) 2010-2013 MIURA Shirow (sharow)
+;;  Copyright (C) 2010-2016 sharow
 ;;
 ;; for x86_64, gcc-abi
 ;; assemble with:
