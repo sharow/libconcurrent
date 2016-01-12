@@ -5,7 +5,7 @@ tiny asymmetric-coroutine library.
 
 ## Description
 + asymmetric-coroutine
-+ ~~generator~~ bidirectional communication by `yield_value`/`resume_value`
++ ~~generator~~ bidirectional communication with `yield_value`/`resume_value`
 + native context switch
 + ~~avoid another-lib dependency~~ C11
 + platform
