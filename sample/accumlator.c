@@ -23,11 +23,10 @@ noreturn void accumlator(struct concurrent_ctx *ctx)
 int main(void)
 {
     struct concurrent_ctx *ctx;
-    uint8_t *stack;
-
+    uint8_t stack[STACK_SIZE];
+    uint8_t ctx_alloc[ctx_sizeof()];
     concurrent_init();
-    ctx = malloc(ctx_sizeof());
-    stack = malloc(sizeof(*stack) * STACK_SIZE);
+    ctx = (struct concurrent_ctx *)ctx_alloc;
     ctx_construct(ctx, stack, STACK_SIZE, accumlator, NULL);
     for (int i = 0; i < 10; i++) {
         int a = i;
@@ -38,8 +37,6 @@ int main(void)
         
     }
     ctx_destruct(ctx);
-    free(stack);
-    free(ctx);
     concurrent_fin();
     return EXIT_SUCCESS;
 }
