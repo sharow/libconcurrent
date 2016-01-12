@@ -36,10 +36,11 @@ concurrent_construct(struct concurrent_ctx *ctx,
 void concurrent_destruct(struct concurrent_ctx *ctx);
 void *concurrent_resume_with_value(struct concurrent_ctx *ctx, void *value);
 void *concurrent_resume(struct concurrent_ctx *ctx);
+void *concurrent_get_resume_value(struct concurrent_ctx *ctx);
 void *concurrent_yield_with_value(struct concurrent_ctx *ctx, void *value);
 void *concurrent_yield(struct concurrent_ctx *ctx);
+void *concurrent_get_yield_value(struct concurrent_ctx *ctx);
 void concurrent_reset(struct concurrent_ctx *ctx);
-void *concurrent_get_resume_value(struct concurrent_ctx *ctx);
 void *concurrent_get_user_ptr(struct concurrent_ctx *ctx);
 size_t concurrent_get_stack_used(struct concurrent_ctx *ctx);
 bool concurrent_is_done(struct concurrent_ctx *ctx);

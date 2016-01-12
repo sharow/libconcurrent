@@ -14,10 +14,11 @@
 #define ctx_destruct concurrent_destruct
 #define resume_value concurrent_resume_with_value
 #define resume concurrent_resume
+#define ctx_get_resume_value concurrent_get_resume_value
 #define yield_value concurrent_yield_with_value
 #define yield concurrent_yield
+#define ctx_get_yiled_value concurrent_get_yield_value
 #define ctx_reset concurrent_reset
-#define ctx_get_resume_value concurrent_get_resume_value
 #define ctx_get_user_ptr concurrent_get_user_ptr
 #define ctx_get_stack_used concurrent_get_stack_used
 #define ctx_is_done concurrent_is_done
