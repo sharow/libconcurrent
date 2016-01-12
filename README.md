@@ -5,9 +5,9 @@ tiny asymmetric-coroutine library.
 
 ## Description
 + asymmetric-coroutine
-+ generator
++ ~~generator~~ bidirectional communication by `yield_value`/`resume_value`
 + native context switch
-+ avoid another-lib dependency
++ ~~avoid another-lib dependency~~ C11
 + platform
  + Linux i686, X86_64, ARMv6(RaspberryPi), ARMv7(RaspberryPi2)
  + Windows i686 (mingw only)
@@ -18,48 +18,60 @@ tiny asymmetric-coroutine library.
 ```
 #include <stdio.h>
 #include <stdlib.h>
-#include "concurrent/concurrent.h"
-#include "concurrent/short_lower_case_api.h"
+#include <stdnoreturn.h>
 
-void coro(ConcurrentContext *aContext)
+#include <concurrent/concurrent.h>
+#include <concurrent/shortname.h>
+
+#define STACK_SIZE (1024 * 2)
+
+
+struct value { int a, b; };
+
+noreturn void accumlator(struct concurrent_ctx *ctx)
 {
-    int i = 0;
+    struct value *v = ctx_get_resume_value(ctx);
     for (;;) {
-        printf("coro: %d\n", i++);
-        yield(aContext);
+        int result = v->a + v->b;
+        v = yield_value(ctx, &result); // send result / receive next value
     }
 }
 
 int main(void)
 {
-    ConcurrentContext *context;
-    unsigned char stack[1024];
-    int i;
+    struct concurrent_ctx *ctx;
+    uint8_t stack[STACK_SIZE];
+    uint8_t ctx_alloc[ctx_sizeof()];
     concurrent_init();
-    context = malloc(ctx_sizeof());
-    ctx_construct(context, stack, sizeof(stack), coro, NULL);
-    for (i = 0; i < 10; i++) {
-        ctx_resume(context);
+    ctx = (struct concurrent_ctx *)ctx_alloc;
+    ctx_construct(ctx, stack, STACK_SIZE, accumlator, NULL);
+    for (int i = 0; i < 10; i++) {
+        int a = i;
+        int b = 10 - i;
+        int *result;
+        result = resume_value(ctx, &(struct value){a, b}); // send value / receive result
+        printf("%d + %d = %d\n", a, b, *result);
+        
     }
-    ctx_destruct(context);
-    free(context);
+    ctx_destruct(ctx);
+    free(ctx);
     concurrent_fin();
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 /*
-$ gcc -o sample sample.c ./libconcurrent.a
+$ gcc -o sample sample.c -lconcurrent.a
 $ ./sample
-coro: 0
-coro: 1
-coro: 2
-coro: 3
-coro: 4
-coro: 5
-coro: 6
-coro: 7
-coro: 8
-coro: 9
+0 + 10 = 10
+1 + 9 = 10
+2 + 8 = 10
+3 + 7 = 10
+4 + 6 = 10
+5 + 5 = 10
+6 + 4 = 10
+7 + 3 = 10
+8 + 2 = 10
+9 + 1 = 10
 */
 ```
 
@@ -71,9 +83,8 @@ coro: 9
 ```
 $ git clone git@github.com:sharow/libconcurrent.git libconcurrent
 $ cd libconcurrent
-$ make depend
 $ make
-$ # and get libconcurrent.a
+$ sudo make install
 
 ```
 
