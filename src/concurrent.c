@@ -39,12 +39,17 @@ struct concurrent_ctx {
 };
 
 
-static void concurrent_setup_execution_context(struct concurrent_ctx *ctx);
-
 noreturn static void
 panic(void)
 {
     abort();
+}
+
+static void
+concurrent_setup_execution_context(struct concurrent_ctx *ctx)
+{
+    ctx->stack_ptr = ctx->stack_base;
+    concurrent_arch_setup_execution_context(ctx);
 }
 
 
@@ -143,6 +148,7 @@ concurrent_resume(struct concurrent_ctx *ctx)
 {
     return concurrent_resume_with_value(ctx, NULL);
 }
+
 void *
 concurrent_get_resume_value(struct concurrent_ctx *ctx)
 {
@@ -206,9 +212,3 @@ concurrent_get_stack_used(struct concurrent_ctx *ctx)
     return (size_t)(ctx->stack_base - ctx->stack_ptr);
 }
 
-static void
-concurrent_setup_execution_context(struct concurrent_ctx *ctx)
-{
-    ctx->stack_ptr = ctx->stack_base;
-    concurrent_arch_setup_execution_context(ctx);
-}
