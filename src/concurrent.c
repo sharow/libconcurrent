@@ -90,7 +90,7 @@ concurrent_construct(struct concurrent_ctx *ctx,
     ctx->proc = proc;
     ctx->user_ptr = user_ptr;
     ctx->stack_buffer = (uint8_t *)((size_t)(stack_buffer + 15) & ~15);
-    ctx->stack_size = (stack_size + stack_buffer - ctx->stack_buffer) & ~15;
+    ctx->stack_size = (stack_size + (size_t)(stack_buffer - ctx->stack_buffer)) & ~15;
     ctx->stack_base = (size_t)(ctx->stack_buffer + ctx->stack_size);
     ctx->stack_ptr = 0;
     ctx->state = CONCURRENT_STATE_SETUP;
