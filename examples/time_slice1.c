@@ -10,43 +10,38 @@
 #include <concurrent/concurrent.h>
 #include <concurrent/shortname.h>
 
-#define MS 1
-#define TIME_SLICE (30 / MS)
+#define TIME_SLICE_SEC (0.1)
+
+
+struct task_info {
+    const char *out;
+};
 
 const struct timespec g_sleep_ts = {
     .tv_sec = 0,
-    .tv_nsec = 1000 * 1000 * 10
-};
+    .tv_nsec = 1000 * 1000 * 5
+}; // 5 ms
 
-noreturn void task0(struct concurrent_ctx *ctx)
+noreturn void task(struct concurrent_ctx *ctx)
 {
-    clock_t clk;
-    clk = clock();
+    struct task_info *info = ctx_get_user_ptr(ctx);
+    struct timespec t0 = {0}, t1 = {0};
+    clock_gettime(CLOCK_MONOTONIC, &t0);
     for (;;) {
-        printf("A");
+        printf("%s", info->out);
         fflush(stdout);
-        if (((clock() - clk) * 1000.0 / CLOCKS_PER_SEC) > TIME_SLICE) {
-            printf("\ntask0: yield\n");
-            yield(ctx);
-            clk = clock();
-        }
-        nanosleep(&g_sleep_ts, NULL);
-    }
-}
 
-noreturn void task1(struct concurrent_ctx *ctx)
-{
-    clock_t clk;
-    clk = clock();
-    for (;;) {
-        printf("B");
-        fflush(stdout);
-        if (((clock() - clk) * 1000.0 / CLOCKS_PER_SEC) > TIME_SLICE) {
-            printf("\ntask1: yield\n");
+        clock_gettime(CLOCK_MONOTONIC, &t1);
+        double s0 = t0.tv_sec + t0.tv_nsec / 1.0e9;
+        double s1 = t1.tv_sec + t1.tv_nsec / 1.0e9;
+        if ((s1 - s0) > TIME_SLICE_SEC) {
+            printf("\ntask %s: yield\n", info->out);
             yield(ctx);
-            clk = clock();
+            clock_gettime(CLOCK_MONOTONIC, &t0);
         }
-        nanosleep(&g_sleep_ts, NULL);
+        if (nanosleep(&g_sleep_ts, NULL)) {
+            abort();
+        }
     }
 }
 
@@ -62,18 +57,18 @@ int main(void)
 
     ctx0 = malloc(ctx_sizeof());
     stack0 = malloc(sizeof(*stack0) * stack_size);
-    ctx_construct(ctx0, stack0, stack_size, task0, NULL);
+    ctx_construct(ctx0, stack0, stack_size, task, &(struct task_info){"A"});
 
     ctx1 = malloc(ctx_sizeof());
     stack1 = malloc(sizeof(*stack1) * stack_size);
-    ctx_construct(ctx1, stack1, stack_size, task1, NULL);
+    ctx_construct(ctx1, stack1, stack_size, task, &(struct task_info){"B"});
 
     {
         int i;
         for (i = 0; i < 10; i++) {
-            printf("main: resume task0\n");
+            printf("main:\n");
             resume(ctx0);
-            printf("main: resume task1\n");
+            printf("main:\n");
             resume(ctx1);
         }
     }
