@@ -12,7 +12,7 @@
 
 struct value { int a, b; };
 
-noreturn void accumlator(struct concurrent_ctx *ctx)
+noreturn void accumulator(struct concurrent_ctx *ctx)
 {
     struct value *v = ctx_get_resume_value(ctx);
     for (;;) {
@@ -28,7 +28,7 @@ int main(void)
     uint8_t ctx_alloc[ctx_sizeof()];
     concurrent_init();
     ctx = (struct concurrent_ctx *)ctx_alloc;
-    ctx_construct(ctx, stack, STACK_SIZE, accumlator, NULL);
+    ctx_construct(ctx, stack, STACK_SIZE, accumulator, NULL);
     for (int i = 0; i < 10; i++) {
         int a = i;
         int b = 10 - i;
