@@ -10,7 +10,7 @@ UNAME=uname
 
 .SUFFIXES: .c .a .o .h .asm
 .PHONY: clean help
-.PHONY: examples test
+.PHONY: examples example sample test
 .PHONY: install
 .VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
 
@@ -25,12 +25,7 @@ ifeq ($(SYSTEM),)
 endif
 
 NASM_FLAGS=
-ifeq ($(SYSTEM),Cygwin)
- NASM_FLAGS+=-f win$(ARCH_BITS)
- ifeq ($(ARCH),i686)
-  NASM_FLAGS+=--prefix _
- endif
-else ifeq ($(SYSTEM),Msys)
+ifeq ($(findstring true, $(eq $(SYSTEM),Cygwin), $(eq $(SYSTEM),MSys)), true)
  NASM_FLAGS+=-f win$(ARCH_BITS)
  ifeq ($(ARCH),i686)
   NASM_FLAGS+=--prefix _
@@ -75,8 +70,6 @@ else
  CFLAGS+=-O2
 endif
 
-LDFLAGS+=--version-exports-section="$(VERSION)"
-
 
 TARGET=libconcurrent.a
 INCDIR+=-I.
@@ -92,6 +85,9 @@ OBJECT+=$(OBJECT_ARCH)
 
 all: $(TARGET)
 
+
+example: examples
+sample: examples
 examples: $(TARGET)
 	make -C examples
 
@@ -102,7 +98,7 @@ $(TARGET): $(OBJECT)
 	$(AR) crv $(TARGET) $(OBJECT)
 
 help:
-	@echo "clean help examples test"
+	@echo "make <clean|help|examples|test>"
 
 install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
