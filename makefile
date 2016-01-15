@@ -1,6 +1,6 @@
 #
 #  libconcurrent
-#  Copyright (C) 2010-2014 MIURA Shirow (sharow)
+#  Copyright (C) 2010-2016 sharow
 #
 
 CC=$(PREFIX)gcc
@@ -11,7 +11,7 @@ UNAME=uname
 .SUFFIXES: .c .a .o .h .asm
 .PHONY: clean help
 .PHONY: examples example sample test
-.PHONY: install
+.PHONY: install uninstall
 .VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
 
 VERSION=0.4.0
@@ -114,12 +114,18 @@ $(TARGET): $(OBJECT)
 	$(AR) crv $(TARGET) $(OBJECT)
 
 help:
-	@echo "make <clean|help|examples|test>"
+	@echo "make [clean|help|examples|test|install|uninstall]"
 
 install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
 	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)/usr/include/concurrent/concurrent.h
 	install -Dm644 include/concurrent/shortname.h $(DESTDIR)/usr/include/concurrent/shortname.h
+
+uninstall:
+	rm $(DESTDIR)/usr/lib/libconcurrent.a
+	rm $(DESTDIR)/usr/include/concurrent/concurrent.h
+	rm $(DESTDIR)/usr/include/concurrent/shortname.h
+	rmdir $(DESTDIR)/usr/include/concurrent
 
 clean:
 	@$(MAKE) -C examples clean
@@ -134,7 +140,6 @@ clean:
 .asm.o:
 	$(AS) $(ASFLAGS) $< -o $@
 
-#depend
 depend:
 	$(RM) -f depend.inc
 	$(CC) $(CFLAGS) $(INCDIR) -MM $(SOURCE) > depend.inc
