@@ -1,6 +1,6 @@
 #
 #  libconcurrent
-#  Copyright (C) 2010-2011 MIURA Shirow (sharow)
+#  Copyright (C) 2010-2016 sharow
 #
 
 .SUFFIXES: .c .o .h .exe
@@ -16,7 +16,7 @@ else
 endif
 
 EXT= #
-ifeq ($(shell uname -o),Cygwin)
+ifeq ($(findstring true, $(eq $(SYSTEM),Cygwin), $(eq $(SYSTEM),MSys)), true)
  EXT=.exe
 endif
 
@@ -43,4 +43,4 @@ clean:
 
 # suffix rule
 .c.exe:
-	$(CC) $(CFLAGS) $(INCDIR) $< -o $(subst .c,$(EXT),$<) ../libconcurrent.a
+	$(CC) $(CFLAGS) $(INCDIR) $< -o $(subst .c,$(EXT),$<) -L../ -lconcurrent
