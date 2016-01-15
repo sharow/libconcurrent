@@ -1,5 +1,7 @@
 libconcurrent
 =============
+[![zlib License](http://img.shields.io/badge/license-zlib-orange.svg?style=flat-square)](https://github.com/sharow/libconcurrent/blob/master/LICENSE)
+
 
 tiny asymmetric-coroutine library.
 
@@ -111,9 +113,6 @@ one context switch in 125 ns
 one context switch in 954 ns
 1048287 resume/yield pair per second
 ```
-
-## License
-[zlib](https://github.com/sharow/libconcurrent/blob/master/LICENSE)
 
 
 ## VS. 
