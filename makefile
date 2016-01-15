@@ -57,6 +57,22 @@ else
  ARCH_BITS=32
 endif
 
+# FreeBSD has its own uname -m style
+ifeq ($(SYSTEM),FreeBSD)
+ CC=cc
+ LD=ld
+ ifeq ($(ARCH),amd64)
+  ARCH=x86_64
+  ARCH_BITS=64
+ else ifeq ($(ARCH),i386)
+  ARCH=i686
+  ARCH_BITS=32
+ else ifeq ($(ARCH),arm) # arm not tested, just a guess
+  ARCH_BITS=32
+  AS=as
+  ASFLAGS=
+ endif
+endif
 
 CFLAGS+=-Wall
 CFLAGS+=-std=c11
@@ -89,10 +105,10 @@ all: $(TARGET)
 example: examples
 sample: examples
 examples: $(TARGET)
-	make -C examples
+	$(MAKE) -C examples
 
 test: $(TARGET)
-	make -C test
+	$(MAKE) -C test
 
 $(TARGET): $(OBJECT)
 	$(AR) crv $(TARGET) $(OBJECT)
@@ -106,8 +122,8 @@ install: $(TARGET)
 	install -Dm644 include/concurrent/shortname.h $(DESTDIR)/usr/include/concurrent/shortname.h
 
 clean:
-	@make -C examples clean
-	@make -C test clean
+	@$(MAKE) -C examples clean
+	@$(MAKE) -C test clean
 	@rm -f $(OBJECT)
 	@rm -f $(TARGET)
 
