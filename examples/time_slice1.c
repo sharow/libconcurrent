@@ -1,6 +1,8 @@
 /* -*- Mode: c; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
 #define _GNU_SOURCE
+#if !defined(__FreeBSD__)
 #include <features.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
