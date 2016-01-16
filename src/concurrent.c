@@ -28,6 +28,7 @@ typedef enum {
 struct concurrent_ctx {
     concurrent_proc proc;
     void *user_ptr;
+    uint8_t *stack_orig;
     uint8_t *stack_buffer;
     size_t stack_size;
     size_t stack_base;
@@ -89,6 +90,7 @@ concurrent_construct(struct concurrent_ctx *ctx,
     }
     ctx->proc = proc;
     ctx->user_ptr = user_ptr;
+    ctx->stack_orig = stack_buffer;
     ctx->stack_buffer = (uint8_t *)((size_t)(stack_buffer + 15) & ~15);
     ctx->stack_size = (stack_size + (size_t)(stack_buffer - ctx->stack_buffer)) & ~15;
     ctx->stack_base = (size_t)(ctx->stack_buffer + ctx->stack_size);
@@ -105,6 +107,7 @@ concurrent_destruct(struct concurrent_ctx *ctx)
 {
     ctx->proc = NULL;
     ctx->user_ptr = NULL;
+    ctx->stack_orig = NULL;
     ctx->stack_buffer = NULL;
     ctx->stack_size = 0;
     ctx->stack_base = 0;
@@ -212,3 +215,8 @@ concurrent_get_stack_used(struct concurrent_ctx *ctx)
     return (size_t)(ctx->stack_base - ctx->stack_ptr);
 }
 
+uint8_t *
+concurrent_get_stack(struct concurrent_ctx *ctx)
+{
+    return ctx->stack_orig;
+}
