@@ -17,7 +17,7 @@
 #define ctx_get_resume_value concurrent_get_resume_value
 #define yield_value concurrent_yield_with_value
 #define yield concurrent_yield
-#define ctx_get_yiled_value concurrent_get_yield_value
+#define ctx_get_yield_value concurrent_get_yield_value
 #define ctx_reset concurrent_reset
 #define ctx_get_user_ptr concurrent_get_user_ptr
 #define ctx_get_stack_used concurrent_get_stack_used
