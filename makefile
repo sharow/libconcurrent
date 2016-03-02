@@ -120,6 +120,7 @@ help:
 
 install: $(TARGET)
 	install -Dm644 libconcurrent.a $(DESTDIR)$(PREFIX)/lib/libconcurrent.a
+	mkdir -p $(DESTDIR)$(PREFIX)/include/concurrent
 	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)$(PREFIX)/include/concurrent/concurrent.h
 	install -Dm644 include/concurrent/shortname.h $(DESTDIR)$(PREFIX)/include/concurrent/shortname.h
 
