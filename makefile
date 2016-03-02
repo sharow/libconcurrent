@@ -61,6 +61,7 @@ endif
 ifeq ($(SYSTEM),FreeBSD)
  CC=cc
  LD=ld
+ PREFIX?=/usr/local
  ifeq ($(ARCH),amd64)
   ARCH=x86_64
   ARCH_BITS=64
@@ -72,6 +73,8 @@ ifeq ($(SYSTEM),FreeBSD)
   AS=as
   ASFLAGS=
  endif
+else
+ PREFIX?=/usr
 endif
 
 CFLAGS+=-Wall
@@ -82,10 +85,9 @@ CFLAGS+=-fno-stack-protector  # for Ubuntu gcc patch
 ifeq ($(DEBUG),yes)
  CFLAGS+=-DCONCURRENT_DEBUG
  CFLAGS+=-g -ggdb
-else
+else ifneq ($(SYSTEM),FreeBSD)
  CFLAGS+=-O2
 endif
-
 
 TARGET=libconcurrent.a
 INCDIR+=-I.
@@ -117,15 +119,15 @@ help:
 	@echo "make [clean|help|examples|test|install|uninstall]"
 
 install: $(TARGET)
-	install -Dm644 libconcurrent.a $(DESTDIR)/usr/lib/libconcurrent.a
-	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)/usr/include/concurrent/concurrent.h
-	install -Dm644 include/concurrent/shortname.h $(DESTDIR)/usr/include/concurrent/shortname.h
+	install -Dm644 libconcurrent.a $(DESTDIR)$(PREFIX)/lib/libconcurrent.a
+	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)$(PREFIX)/include/concurrent/concurrent.h
+	install -Dm644 include/concurrent/shortname.h $(DESTDIR)$(PREFIX)/include/concurrent/shortname.h
 
 uninstall:
-	rm $(DESTDIR)/usr/lib/libconcurrent.a
-	rm $(DESTDIR)/usr/include/concurrent/concurrent.h
-	rm $(DESTDIR)/usr/include/concurrent/shortname.h
-	rmdir $(DESTDIR)/usr/include/concurrent
+	rm $(DESTDIR)$(PREFIX)/lib/libconcurrent.a
+	rm $(DESTDIR)$(PREFIX)/include/concurrent/concurrent.h
+	rm $(DESTDIR)$(PREFIX)/include/concurrent/shortname.h
+	rmdir $(DESTDIR)$(PREFIX)/include/concurrent
 
 clean:
 	@$(MAKE) -C examples clean
@@ -147,4 +149,3 @@ depend:
 concurrent_arch.o: concurrent_arch.asm
 
 include depend.inc
-
