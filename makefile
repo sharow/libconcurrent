@@ -3,8 +3,8 @@
 #  Copyright (C) 2010-2016 sharow
 #
 
-CC=$(PREFIX)gcc
-LD=$(PREFIX)ld
+CC?=gcc
+LD?=ld
 NASM=nasm
 UNAME=uname
 
@@ -61,7 +61,7 @@ endif
 ifeq ($(SYSTEM),FreeBSD)
  CC=cc
  LD=ld
- PREFIX?=/usr/local
+ DESTDIR?=/usr/local
  ifeq ($(ARCH),amd64)
   ARCH=x86_64
   ARCH_BITS=64
@@ -74,7 +74,7 @@ ifeq ($(SYSTEM),FreeBSD)
   ASFLAGS=
  endif
 else
- PREFIX?=/usr
+ DESTDIR?=/usr
 endif
 
 CFLAGS+=-Wall
@@ -119,16 +119,16 @@ help:
 	@echo "make [clean|help|examples|test|install|uninstall]"
 
 install: $(TARGET)
-	install -Dm644 libconcurrent.a $(DESTDIR)$(PREFIX)/lib/libconcurrent.a
-	mkdir -p $(DESTDIR)$(PREFIX)/include/concurrent
-	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)$(PREFIX)/include/concurrent/concurrent.h
-	install -Dm644 include/concurrent/shortname.h $(DESTDIR)$(PREFIX)/include/concurrent/shortname.h
+	install -Dm644 libconcurrent.a $(DESTDIR)/lib/libconcurrent.a
+	mkdir -p $(DESTDIR)/include/concurrent
+	install -Dm644 include/concurrent/concurrent.h $(DESTDIR)/include/concurrent/concurrent.h
+	install -Dm644 include/concurrent/shortname.h $(DESTDIR)/include/concurrent/shortname.h
 
 uninstall:
-	rm $(DESTDIR)$(PREFIX)/lib/libconcurrent.a
-	rm $(DESTDIR)$(PREFIX)/include/concurrent/concurrent.h
-	rm $(DESTDIR)$(PREFIX)/include/concurrent/shortname.h
-	rmdir $(DESTDIR)$(PREFIX)/include/concurrent
+	rm $(DESTDIR)/lib/libconcurrent.a
+	rm $(DESTDIR)/include/concurrent/concurrent.h
+	rm $(DESTDIR)/include/concurrent/shortname.h
+	rmdir $(DESTDIR)/include/concurrent
 
 clean:
 	@$(MAKE) -C examples clean
