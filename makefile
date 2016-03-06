@@ -59,8 +59,6 @@ endif
 
 # FreeBSD has its own uname -m style
 ifeq ($(SYSTEM),FreeBSD)
- CC=cc
- LD=ld
  DESTDIR?=/usr/local
  ifeq ($(ARCH),amd64)
   ARCH=x86_64
