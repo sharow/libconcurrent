@@ -32,14 +32,13 @@ tiny asymmetric-coroutine library.
 #define STACK_SIZE (1024 * 2)
 
 
-struct value { int a, b; };
-
 noreturn void accumulator(struct concurrent_ctx *ctx)
 {
-    struct value *v = ctx_get_resume_value(ctx);
+    int *v = ctx_get_resume_value(ctx);
+    int total = *v;
     for (;;) {
-        int result = v->a + v->b;
-        v = yield_value(ctx, &result); // send result / receive next value
+        v = yield_value(ctx, &total); // send total / receive next value
+        total += *v;
     }
 }
 
@@ -51,12 +50,9 @@ int main(void)
     concurrent_init();
     ctx = (struct concurrent_ctx *)ctx_alloc;
     ctx_construct(ctx, stack, STACK_SIZE, accumulator, NULL);
-    for (int i = 0; i < 10; i++) {
-        int a = i;
-        int b = 10 - i;
-        int *result;
-        result = resume_value(ctx, &(struct value){a, b}); // send value / receive result
-        printf("%d + %d = %d\n", a, b, *result);
+    for (int i = 1; i <= 10; i++) {
+        int *total = resume_value(ctx, &i); // send value / receive total
+        printf("total = %d\n", *total);
         
     }
     ctx_destruct(ctx);
@@ -67,16 +63,16 @@ int main(void)
 /*
 $ gcc -o sample sample.c -lconcurrent.a
 $ ./sample
-0 + 10 = 10
-1 + 9 = 10
-2 + 8 = 10
-3 + 7 = 10
-4 + 6 = 10
-5 + 5 = 10
-6 + 4 = 10
-7 + 3 = 10
-8 + 2 = 10
-9 + 1 = 10
+total = 1
+total = 3
+total = 6
+total = 10
+total = 15
+total = 21
+total = 28
+total = 36
+total = 45
+total = 55
 */
 ```
 

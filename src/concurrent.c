@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdnoreturn.h>
+#include <assert.h>
 
 #include "concurrent/concurrent.h"
 #include "concurrent_arch.h"
@@ -28,10 +29,10 @@ typedef enum {
 struct concurrent_ctx {
     concurrent_proc proc;
     void *user_ptr;
-    uint8_t *stack_buffer;
+    void *stack_orig;
     size_t stack_size;
-    size_t stack_base;
-    size_t stack_ptr;
+    uintptr_t stack_base;
+    uintptr_t stack_ptr;
     concurrent_state state;
     void *caller_return_addr;
     void *yield_value;
@@ -75,11 +76,13 @@ concurrent_sizeof(void)
 
 concurrent_status
 concurrent_construct(struct concurrent_ctx *ctx,
-                     uint8_t *stack_buffer,
+                     void *stack_buffer,
                      size_t stack_size,
                      concurrent_proc proc,
                      void *user_ptr)
 {
+    const uintptr_t align = 16 - 1;
+    uintptr_t aligned_stack_buffer;
     if (ctx && stack_buffer && proc) {
     } else {
         return CONCURRENT_E_INVALID_ARGUMENT;
@@ -87,11 +90,13 @@ concurrent_construct(struct concurrent_ctx *ctx,
     if (stack_size < CONCURRENT_MIN_STACK_SIZE) {
         return CONCURRENT_E_STACKSIZE_TOO_SMALL;
     }
+    aligned_stack_buffer = ((uintptr_t)stack_buffer + align) & ~align;
+    assert((uintptr_t)aligned_stack_buffer >= (uintptr_t)stack_buffer);
     ctx->proc = proc;
     ctx->user_ptr = user_ptr;
-    ctx->stack_buffer = (uint8_t *)((size_t)(stack_buffer + 15) & ~15);
-    ctx->stack_size = (stack_size + (size_t)(stack_buffer - ctx->stack_buffer)) & ~15;
-    ctx->stack_base = (size_t)(ctx->stack_buffer + ctx->stack_size);
+    ctx->stack_orig = stack_buffer;
+    ctx->stack_size = (stack_size - (size_t)(aligned_stack_buffer - (uintptr_t)stack_buffer)) & ~(size_t)align;
+    ctx->stack_base = aligned_stack_buffer + ctx->stack_size;
     ctx->stack_ptr = 0;
     ctx->state = CONCURRENT_STATE_SETUP;
     ctx->caller_return_addr = NULL;
@@ -105,7 +110,7 @@ concurrent_destruct(struct concurrent_ctx *ctx)
 {
     ctx->proc = NULL;
     ctx->user_ptr = NULL;
-    ctx->stack_buffer = NULL;
+    ctx->stack_orig = NULL;
     ctx->stack_size = 0;
     ctx->stack_base = 0;
     ctx->stack_ptr = 0;
@@ -197,7 +202,7 @@ concurrent_get_user_ptr(struct concurrent_ctx *ctx)
 bool
 concurrent_is_done(struct concurrent_ctx *ctx)
 {
-    return (ctx->state == CONCURRENT_STATE_DONE);
+    return (ctx->state == CONCURRENT_STATE_DONE) ? true : false;
 }
 
 size_t
@@ -212,3 +217,8 @@ concurrent_get_stack_used(struct concurrent_ctx *ctx)
     return (size_t)(ctx->stack_base - ctx->stack_ptr);
 }
 
+void *
+concurrent_get_stack(struct concurrent_ctx *ctx)
+{
+    return ctx->stack_orig;
+}

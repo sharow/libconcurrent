@@ -12,6 +12,7 @@
 #define ctx_sizeof concurrent_sizeof
 #define ctx_construct concurrent_construct
 #define ctx_destruct concurrent_destruct
+
 #define resume_value concurrent_resume_with_value
 #define resume concurrent_resume
 #define ctx_get_resume_value concurrent_get_resume_value
@@ -21,6 +22,7 @@
 #define ctx_reset concurrent_reset
 #define ctx_get_user_ptr concurrent_get_user_ptr
 #define ctx_get_stack_used concurrent_get_stack_used
+#define ctx_get_stack concurrent_get_stack
 #define ctx_is_done concurrent_is_done
 
 

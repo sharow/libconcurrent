@@ -8,7 +8,6 @@
 #define __CONCURRENT_H__
 
 #include <stddef.h>
-#include <stdint.h>
 #include <stdbool.h>
 
 
@@ -28,12 +27,13 @@ size_t concurrent_sizeof(void);
 
 concurrent_status
 concurrent_construct(struct concurrent_ctx *ctx,
-                     uint8_t *stack_buffer,
+                     void *stack_buffer,
                      size_t stack_size,
                      concurrent_proc proc,
                      void *user_ptr);
 
 void concurrent_destruct(struct concurrent_ctx *ctx);
+
 void *concurrent_resume_with_value(struct concurrent_ctx *ctx, void *value);
 void *concurrent_resume(struct concurrent_ctx *ctx);
 void *concurrent_get_resume_value(struct concurrent_ctx *ctx);
@@ -43,6 +43,7 @@ void *concurrent_get_yield_value(struct concurrent_ctx *ctx);
 void concurrent_reset(struct concurrent_ctx *ctx);
 void *concurrent_get_user_ptr(struct concurrent_ctx *ctx);
 size_t concurrent_get_stack_used(struct concurrent_ctx *ctx);
+void *concurrent_get_stack(struct concurrent_ctx *ctx);
 bool concurrent_is_done(struct concurrent_ctx *ctx);
 
 

@@ -31,6 +31,7 @@ SOURCE+=many_context1.c
 SOURCE+=float1.c
 SOURCE+=float2.c
 SOURCE+=time_slice1.c
+SOURCE+=strsplit.c
 OBJECT=$(subst .c,.o, $(SOURCE))
 EXE=$(subst .c,.exe, $(SOURCE))
 
