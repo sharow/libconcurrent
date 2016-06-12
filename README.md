@@ -89,6 +89,9 @@ $ sudo make install
 
 ```
 
+#### for FreeBSD
+Available in ports collection as [devel/libconcurrent](http://portsmon.freebsd.org/portoverview.py?category=devel&portname=libconcurrent)
+
 ## Tests
 ```
 $ make test
