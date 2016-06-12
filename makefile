@@ -14,7 +14,7 @@ UNAME=uname
 .PHONY: install uninstall
 .VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64
 
-VERSION=0.4.0
+VERSION=0.4.2
 
 ifeq ($(ARCH),)
  ARCH=$(shell $(UNAME) -m)
