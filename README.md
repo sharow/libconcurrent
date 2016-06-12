@@ -7,9 +7,9 @@ tiny asymmetric-coroutine library.
 
 ## Description
 + asymmetric-coroutine
-+ ~~generator~~ bidirectional communication with `yield_value`/`resume_value`
++ bidirectional communication by `yield_value`/`resume_value`
 + native context switch
-+ ~~avoid another-lib dependency~~ C11
++ C11
 
 ## Supported Platforms
 |         | x86_64                   | i686               | ARM(v6/v7)               | note             |
