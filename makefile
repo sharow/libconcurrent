@@ -21,7 +21,12 @@ ifeq ($(ARCH),)
 endif
 
 ifeq ($(SYSTEM),)
- SYSTEM=$(shell $(UNAME) -o)
+ SYSNAME=$(shell $(UNAME) -a)
+ ifeq ($(findstring Darwin, $(SYSNAME)), Darwin)
+  SYSTEM=Darwin
+ else
+  SYSTEM=$(shell $(UNAME) -o)
+ endif
 endif
 
 NASM_FLAGS=
@@ -32,6 +37,8 @@ ifeq ($(findstring true, $(eq $(SYSTEM),Cygwin), $(eq $(SYSTEM),MSys)), true)
  endif
 else ifeq ($(SYSTEM),GNU/Linux)
  NASM_FLAGS+=-f elf$(ARCH_BITS)
+else ifeq ($(SYSTEM),Darwin)
+ NASM_FLAGS+=-f macho$(ARCH_BITS) --prefix _
 else
  NASM_FLAGS+=-f elf$(ARCH_BITS)
 endif

@@ -1,9 +1,16 @@
 /* -*- Mode: c; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
 #define _GNU_SOURCE
-#if !defined(__FreeBSD__)
+#if defined(__MACH__)
+#include <sys/types.h>
+#include <sys/_types/_timespec.h>
+#include <mach/mach.h>
+#include <mach/clock.h>
+#define CLOCK_MONOTONIC SYSTEM_CLOCK
+#elif !defined(__FreeBSD__)
 #include <features.h>
 #endif
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -14,6 +21,25 @@
 
 #define TIME_SLICE_SEC (0.1)
 
+
+#if defined(__MACH__)
+int clock_gettime(int clk_id, struct timespec *tp)
+{
+    assert(clk_id == CLOCK_MONOTONIC);
+    kern_return_t retval = KERN_SUCCESS;
+    clock_serv_t cclock;
+    mach_timespec_t mts;
+
+    host_get_clock_service(mach_host_self(), clk_id, &cclock);
+    retval = clock_get_time(cclock, &mts);
+    mach_port_deallocate(mach_task_self(), cclock);
+
+    tp->tv_sec = mts.tv_sec;
+    tp->tv_nsec = mts.tv_nsec;
+
+    return retval;
+}
+#endif
 
 struct task_info {
     const char *out;

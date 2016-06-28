@@ -70,7 +70,7 @@ int main(void)
     struct strsplit *s = strsplit_new(text, '|');
     struct split_position *p;
     while ((p = strsplit_next(s)) != NULL) {
-        printf("%.*s\n", p->len, p->s);
+        printf("%.*s\n", (int)p->len, p->s);
     }
     strsplit_del(s);
 

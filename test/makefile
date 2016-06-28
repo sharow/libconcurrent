@@ -11,7 +11,7 @@ else
 endif
 
 EXT=out
-ifeq ($(shell uname -o),Cygwin)
+ifeq ($(findstring Cygwin, $(shell uname -a)), Cygwin)
  EXT=exe
 endif
 
