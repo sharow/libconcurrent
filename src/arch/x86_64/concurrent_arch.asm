@@ -47,14 +47,15 @@ concurrent_arch_setup_execution_context:
     mov rcx, rdi
 
     ; exchange stack
-    mov rax, qword [concurrent_offsetof_stack_ptr]
+    mov rax, [rel concurrent_offsetof_stack_ptr]
     xchg rsp, qword [rcx + rax]
 
     push rcx                                 ; ctx for "return" or out of scope
     push rcx                                 ; ctx for yield
-    push concurrent_arch_return_at_procedure
+    lea rax, [rel concurrent_arch_return_at_procedure]
+    push rax
 
-    mov rax, qword [concurrent_offsetof_procedure]
+    mov rax, [rel concurrent_offsetof_procedure]
     push qword [rcx + rax] ; entry point
 
     ; initial register value
@@ -69,7 +70,7 @@ concurrent_arch_setup_execution_context:
     push rax  ; r15
 
     ; restore stack
-    mov rax, qword [concurrent_offsetof_stack_ptr]
+    mov rax, [rel concurrent_offsetof_stack_ptr]
     xchg rsp, qword [rcx + rax]
 
     ret
@@ -85,11 +86,11 @@ concurrent_arch_trampoline_to_procedure:
 
     ; save return address
     mov rdx, qword [rsp + 8 * 8]      ; return address of this function
-    mov rax, qword [concurrent_offsetof_caller_return_addr]
+    mov rax, [rel concurrent_offsetof_caller_return_addr]
     mov qword [rcx + rax], rdx
 
     ; exchange stack
-    mov rax, qword [concurrent_offsetof_stack_ptr]
+    mov rax, [rel concurrent_offsetof_stack_ptr]
     xchg rsp, qword [rcx + rax]
     nop
 
@@ -107,12 +108,12 @@ concurrent_arch_trampoline_to_caller:
     save_context
 
     ; exchange stack
-    mov rax, qword [concurrent_offsetof_stack_ptr]
+    mov rax, [rel concurrent_offsetof_stack_ptr]
     xchg qword [rcx + rax], rsp
     nop
 
     ; get return address
-    mov rax, qword [concurrent_offsetof_caller_return_addr]
+    mov rax, [rel concurrent_offsetof_caller_return_addr]
     mov rax, qword [rcx + rax]
 
     restore_context
@@ -130,12 +131,12 @@ concurrent_arch_return_at_procedure:
     save_context
 
     ; exchange stack
-    mov rax, qword [concurrent_offsetof_stack_ptr]
+    mov rax, [rel concurrent_offsetof_stack_ptr]
     xchg qword [rcx + rax], rsp
     nop
 
     ; get return address
-    mov rax, qword [concurrent_offsetof_caller_return_addr]
+    mov rax, [rel concurrent_offsetof_caller_return_addr]
     mov rax, qword [rcx + rax]
 
     restore_context
