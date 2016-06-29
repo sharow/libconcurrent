@@ -12,11 +12,11 @@ tiny asymmetric-coroutine library.
 + C11
 
 ## Supported Platforms
-|         | x86_64                   | i686               | ARM(v6/v7)               | note             |
-|---------|--------------------------|--------------------|--------------------------|------------------|
-| Linux   | :heavy_check_mark:       | :heavy_check_mark: | :heavy_check_mark:       |                  |
-| FreeBSD | :heavy_check_mark:       | :heavy_check_mark: | :question:               |Thanks [@t6](https://github.com/t6)|
-| Windows | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | use MSys2/Cygwin |
+|         | x86_64              | i686                     | ARM(v6/v7)               | note             |
+|---------|---------------------|--------------------------|--------------------------|------------------|
+| Linux   | :heavy_check_mark:  | :heavy_check_mark:       | :heavy_check_mark:       |                  |
+| FreeBSD | :heavy_check_mark:  | :heavy_check_mark:       | :question:               |Thanks [@t6](https://github.com/t6)|
+| OSX     | :heavy_check_mark:  | :heavy_multiplication_x: | :heavy_multiplication_x: |Thanks [@kpamnany](https://github.com/kpamnany) |
 
 ## Code Example
 
@@ -77,7 +77,7 @@ total = 55
 ```
 
 ## Requirements for build
-- nasm: http://www.nasm.us/
+- [nasm](http://www.nasm.us/)
 
 
 ## Installation
@@ -91,6 +91,14 @@ $ sudo make install
 
 #### for FreeBSD
 Available in ports collection as [devel/libconcurrent](http://portsmon.freebsd.org/portoverview.py?category=devel&portname=libconcurrent)
+
+
+#### for OSX
+- install latest [nasm](http://www.nasm.us/) from [brew](http://brew.sh)
+
+```
+$ brew install nasm
+```
 
 ## Tests
 ```
