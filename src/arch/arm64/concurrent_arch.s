@@ -8,7 +8,7 @@
 	.global _concurrent_arch_trampoline_to_caller	
 
 _concurrent_arch_setup_execution_context:
-	add 	x5, x0, #+32
+	add 	x5, x0, #+40
 	ldr	x3, [x5]
 	mov	x2, sp
 	mov	sp, x3
@@ -42,7 +42,7 @@ _concurrent_arch_setup_execution_context:
 	stp 	q28, q29, [sp, #-32]!
 	stp 	q30, q31, [sp, #-32]!	
 	
-	add 	x5, x0, #+32
+	add 	x5, x0, #+40
 	mov 	x4, sp
 	str 	x4, [x5]
 	
@@ -75,7 +75,7 @@ _concurrent_arch_trampoline_to_procedure:
 	stp 	q30, q31, [sp, #-32]!		
 
 	
-	add 	x5, x0, #+32
+	add 	x5, x0, #+40
 	ldr 	x3, [x5]
 	add 	x6, x0, #0
 	ldr 	x2, [x6]
@@ -142,7 +142,7 @@ _concurrent_arch_trampoline_to_caller:
 	stp 	q28, q29, [sp, #-32]!
 	stp 	q30, q31, [sp, #-32]!			
 
-	add 	x5, x0, #+32
+	add 	x5, x0, #+40
 	ldr 	x3, [x5]
 	mov 	x4, sp
 	str 	x4, [x5]
@@ -179,7 +179,7 @@ _concurrent_arch_trampoline_to_caller:
 _concurrent_arch_return_at_procedure:	
 	ldr 	x0, [sp]
 	
-	add 	x5, x0, #+32
+	add 	x5, x0, #+40
 	ldr 	x3, [x5]
 	mov 	sp, x3  
 
