@@ -88,8 +88,8 @@ _concurrent_arch_trampoline_to_procedure:
 	mov 	sp, x3
 
 
-	adrp 	x4, concurrent_arch_return_at_procedure@PAGE
-	add 	x4, x4, concurrent_arch_return_at_procedure@PAGEOFF
+	adrp 	x4, _concurrent_arch_return_at_procedure@PAGE
+	add 	x4, x4, _concurrent_arch_return_at_procedure@PAGEOFF
 	mov 	lr, x4
 
 
@@ -180,7 +180,7 @@ _concurrent_arch_trampoline_to_caller:
 	
 	br 	x30
 
-concurrent_arch_return_at_procedure:	
+_concurrent_arch_return_at_procedure:	
 	ldr 	x0, [sp]
 	
 	add 	x5, x0, #+40
