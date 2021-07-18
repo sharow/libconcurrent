@@ -2,11 +2,15 @@
 // for AARCH64
 //
 
+	.text
 	.p2align 2
 	.global _concurrent_arch_setup_execution_context
 	.global _concurrent_arch_trampoline_to_procedure
 	.global _concurrent_arch_trampoline_to_caller
-
+	.global _concurrent_offsetof_procedure
+	.global _concurrent_offsetof_stack_ptr
+	.global _concurrent_offsetof_caller_return_addr		
+	
 _concurrent_arch_setup_execution_context:
 	add 	x5, x0, #+40
 	ldr	x3, [x5]
@@ -84,8 +88,8 @@ _concurrent_arch_trampoline_to_procedure:
 	mov 	sp, x3
 
 
-	adrp 	x4, _concurrent_arch_return_at_procedure@PAGE
-	add 	x4, x4, _concurrent_arch_return_at_procedure@PAGEOFF
+	adrp 	x4, concurrent_arch_return_at_procedure@PAGE
+	add 	x4, x4, concurrent_arch_return_at_procedure@PAGEOFF
 	mov 	lr, x4
 
 
@@ -176,7 +180,7 @@ _concurrent_arch_trampoline_to_caller:
 	
 	br 	x30
 
-_concurrent_arch_return_at_procedure:	
+concurrent_arch_return_at_procedure:	
 	ldr 	x0, [sp]
 	
 	add 	x5, x0, #+40
@@ -209,3 +213,9 @@ _concurrent_arch_return_at_procedure:
 	ldp 	x19, x20, [sp], #16
 	
 	ret
+
+	.data
+	.align 8
+_concurrent_offsetof_procedure:           .long 0
+_concurrent_offsetof_stack_ptr:           .long 0
+_concurrent_offsetof_caller_return_addr:  .long 0			
