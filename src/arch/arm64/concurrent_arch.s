@@ -5,7 +5,7 @@
 	.p2align 2
 	.global _concurrent_arch_setup_execution_context
 	.global _concurrent_arch_trampoline_to_procedure
-	.global _concurrent_arch_trampoline_to_caller	
+	.global _concurrent_arch_trampoline_to_caller
 
 _concurrent_arch_setup_execution_context:
 	add 	x5, x0, #+40
@@ -23,7 +23,7 @@ _concurrent_arch_setup_execution_context:
 	stp 	x23, x24, [sp, #-16]!
 	stp 	x25, x26, [sp, #-16]!
 	stp 	x27, x28, [sp, #-16]!
-	stp 	x3, x3, [sp, #-16]!
+	stp 	x2, x3, [sp, #-16]!
 
 	stp 	q0, q1, [sp, #-32]!
 	stp 	q2, q3, [sp, #-32]!
@@ -107,14 +107,14 @@ _concurrent_arch_trampoline_to_procedure:
 	ldp 	q0, q1, [sp], #32
 
 	
-	ldp 	x28, x29, [sp], #16
+	ldp 	x29, x3, [sp], #16
 	ldp 	x27, x28, [sp], #16	
 	ldp 	x25, x26, [sp], #16
 	ldp 	x23, x24, [sp], #16
 	ldp 	x21, x22, [sp], #16	
 	ldp 	x19, x20, [sp], #16	
 	
-	br 	x29
+	br 	x3
 
 	
 _concurrent_arch_trampoline_to_caller:
@@ -164,9 +164,9 @@ _concurrent_arch_trampoline_to_caller:
 	ldp 	q8, q9, [sp], #32
 	ldp 	q6, q7, [sp], #32
 	ldp 	q4, q5, [sp], #32
-	ldp 	q2, q3, [sp], #32	
+	ldp 	q2, q3, [sp], #32
 	ldp 	q0, q1, [sp], #32
-	
+
 	ldp 	x29, x30, [sp], #16
 	ldp 	x27, x28, [sp], #16
 	ldp 	x25, x26, [sp], #16	
@@ -198,7 +198,8 @@ _concurrent_arch_return_at_procedure:
 	ldp 	q6, q7, [sp], #32
 	ldp 	q4, q5, [sp], #32
 	ldp 	q2, q3, [sp], #32	
-	ldp 	q0, q1, [sp], #32		
+	ldp 	q0, q1, [sp], #32
+
 
 	ldp 	x29, x30, [sp], #16
 	ldp 	x27, x28, [sp], #16	
