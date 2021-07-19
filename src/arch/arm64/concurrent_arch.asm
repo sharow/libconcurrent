@@ -1,5 +1,5 @@
 // By Mike Taghavi ( @mitghi )
-// for AARCH64
+// for ARM64
 //
 
 	.text
