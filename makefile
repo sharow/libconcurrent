@@ -61,10 +61,12 @@ else ifeq ($(ARCH),armv7l)
  AS=as
  ASFLAGS=
 else ifeq ($(ARCH),arm64)
- ARCH=arm64
- ARCH_BITS=64
- AS=as
- ASFLAGS=
+ ifeq ($(SYSTEM), Darwin) # only target MacOS
+  ARCH=arm64
+  ARCH_BITS=64
+  AS=as
+  ASFLAGS=
+ endif
 else
  ARCH_BITS=32
 endif
