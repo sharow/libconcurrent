@@ -27,12 +27,13 @@ _concurrent_arch_setup_execution_context:
 	ldr 	x4, [x5]
 	mov 	x3, x4
 
+	eor	x6, x6, x6
 	stp 	x0, x0, [sp, #-16]!
-	stp 	x19, x20, [sp, #-16]!
-	stp	x21, x22, [sp, #-16]!
-	stp 	x23, x24, [sp, #-16]!
-	stp 	x25, x26, [sp, #-16]!
-	stp 	x27, x28, [sp, #-16]!
+	stp 	x6, x6, [sp, #-16]!
+	stp 	x6, x6, [sp, #-16]!
+	stp 	x6, x6, [sp, #-16]!
+	stp 	x6, x6, [sp, #-16]!
+	stp 	x6, x6, [sp, #-16]!
 	stp 	x2, x3, [sp, #-16]!
 
 	stp 	q0, q1, [sp, #-32]!
@@ -169,8 +170,6 @@ _concurrent_arch_trampoline_to_caller:
 	mov 	x4, sp
 	str 	x4, [x5]
 	mov 	sp, x3
-
-	mov 	lr, x4
 
 	ldp 	q30, q31, [sp], #32
 	ldp 	q28, q29, [sp], #32
