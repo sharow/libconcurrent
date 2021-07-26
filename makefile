@@ -12,7 +12,7 @@ UNAME=uname
 .PHONY: clean help
 .PHONY: examples example sample test
 .PHONY: install uninstall
-.VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64 ./src/arch/arm64
+.VPATH: ./ ./src ./src/arch/i386 ./src/arch/x86_64 ./src/arch/arm64 ./src/arch/aarch64
 
 VERSION=0.4.2
 
@@ -60,13 +60,18 @@ else ifeq ($(ARCH),armv7l)
  ARCH_BITS=32
  AS=as
  ASFLAGS=
-else ifeq ($(ARCH),arm64)
+else ifeq ($(ARCH),arm64) # MacOS, iOS, etc
  ifeq ($(SYSTEM), Darwin) # only target MacOS
   ARCH=arm64
   ARCH_BITS=64
   AS=as
   ASFLAGS=
  endif
+else ifeq ($(ARCH), aarch64) # Linux
+ ARCH=aarch64
+ ARCH_BITS=64
+ AS=as
+ ASFLAGS=
 else
  ARCH_BITS=32
 endif
@@ -86,6 +91,10 @@ ifeq ($(SYSTEM),FreeBSD)
   ASFLAGS=
  endif
  else ifeq ($(ARCH),arm64)
+  ARCH_BITS=64
+  AS=as
+  ASFLAGS=
+ else ifeq ($(ARCH),aarch64)
   ARCH_BITS=64
   AS=as
   ASFLAGS=
