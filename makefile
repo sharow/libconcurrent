@@ -66,6 +66,11 @@ else ifeq ($(ARCH),arm64) # MacOS, iOS, etc
   ARCH_BITS=64
   AS=as
   ASFLAGS=
+ else ifeq ($(SYSTEM), FreeBSD)
+  ARCH=aarch64
+  ARCH_BITS=64
+  AS=as
+  ASFLAGS=
  endif
 else ifeq ($(ARCH), aarch64) # Linux
  ARCH=aarch64
